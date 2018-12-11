@@ -1,0 +1,101 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: Georgia Extrabold, serif;
+  font-size: $m-size;
+}
+
+h1, h2 ,h3, h4 {
+  color: brown;
+  padding: .5rem 0;
+  margin: 0;
+}
+
+button {
+  background-color: $button-color;
+  border: 0;
+  border-bottom: 3px solid darken($button-color, 30%);
+  color: #ffffff;
+  cursor: pointer;
+  //min-width: 13rem;
+  outline: 0;
+  padding: .5rem .8rem;
+}
+
+button:hover {
+  background-color: darken($button-color, 20%);
+}
+
+.button__light {
+  display:inline-block;
+  box-sizing: border-box;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0 1rem;
+  width: 35px;
+  outline:none;
+  padding: 0 .5rem;
+}
+
+.button__light:hover {
+  background: none;
+}
+
+.button__small {
+  border-radius: 5px;
+  font-size: small;
+  margin: 1rem;
+  padding: .3rem;
+  text-align: center;
+}
+
+.button-danger {
+  background-color: #e12b0b;
+  border: 0;
+  border-radius: 5px;
+  border-bottom: 1px solid darken(#b72309, 10%);
+  color: #ffffff;
+  cursor: pointer;
+  min-width: 0rem;
+  padding: .5rem .8rem;
+}
+
+.button-danger:hover {
+  background-color: darken(#e12b0b, 10%);
+  color: black;
+}
+
+button:disabled:hover {
+  cursor: default;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $link-color-hover;
+}
+
+.input-placeholder {
+  border: 0 solid gray;
+  border-top-width: 1px;
+  outline: none;
+  resize: none;
+  text-wrap: normal;
+  margin-bottom: .5rem;
+}
+
+.input-placeholder:focus {
+  border: 0 solid black;
+  border-top-width: 2px;
+  outline: none;
+}
+
+.invisible-div {
+  height: 4.4rem;
+}

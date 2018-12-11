@@ -1,0 +1,9 @@
+### GENERATE PRIVATE KEY (key.pem)
+# openssl req -newkey rsa:512 -new -nodes -keyout key.pem -out private_key.pem
+
+### GENERATE CERTIFICATE (cert.pem)
+# openssl req -newkey rsa:512 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+
+
+openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:512
+openssl rsa -pubout -in private_key.pem -out public_key.pem

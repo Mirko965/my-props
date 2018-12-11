@@ -1,0 +1,94 @@
+.form {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.form__input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 45rem;
+}
+
+.form__input input {
+  margin: 0;
+  padding: .7rem;
+}
+
+.form__header--title {
+  text-align: center;
+}
+
+.form__input--option {
+  padding: 1rem;
+}
+
+.form__input--checkbox {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 1rem;
+}
+
+.input__select {
+  padding: .75rem .5rem;
+}
+
+.form__input--social {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin: 1rem 0;
+  min-width: 45rem;
+}
+
+.input__social {
+  margin: 0;
+  min-width: 46rem;
+}
+
+.icon {
+  margin: 0;
+  width: 36px;
+}
+
+.form__input--social-button {
+  display: flex;
+  flex-direction: row;
+  margin: 2rem 0;
+  max-height: 2.5rem;
+}
+
+.form__input--button {
+  padding: .7rem 0;
+}
+
+.form__input--button-small {
+  font-size: small;
+  max-width: 20rem;
+  margin-right: 1rem;
+  padding: 0 .3rem;
+  text-align: center;
+}
+
+.form__info {
+  color: gray;
+  padding: .5rem 0 2rem;
+}
+
+.input__invalid--feedback {
+  color: red;
+  font-size: small;
+  font-style: italic;
+}
+
+.input__invalid {
+  border-color: red;
+  border-style: solid;
+}
+
+

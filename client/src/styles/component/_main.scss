@@ -1,0 +1,11 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  min-height: max-content;
+}
+
+.main > * {
+  flex: 1 100%;
+}

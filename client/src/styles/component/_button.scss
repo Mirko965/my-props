@@ -1,0 +1,36 @@
+.button__small {
+  border-radius: 5px;
+  font-size: small;
+  margin: 1rem;
+  padding: .3rem;
+  text-align: center;
+}
+
+.button__light {
+  padding: 1rem 0;
+}
+
+.button__invisible {
+  background-color: white;
+  border: 0;
+  outline: 0;
+}
+
+.button__invisible--black {
+  background-color: #333745;
+  border: 0;
+  outline: 0;
+}
+
+.button__invisible--black:hover {
+  background-color: #333745;
+  border: 0;
+  color:red;
+  outline: 0;
+}
+
+.button__invisible:hover {
+  background-color: white;
+  border: 0;
+  outline: 0;
+}

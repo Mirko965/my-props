@@ -1,0 +1,24 @@
+.landing {
+  align-items: center;
+  background-color: #222627;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.landing__header {
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+  h1 {
+    color: #e12b0b;
+  }
+}
+
+.landing__image {
+  margin: 4rem auto;
+  padding: 1.8rem 0 8.6rem;
+}
+
