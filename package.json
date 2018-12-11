@@ -18,9 +18,9 @@
   "author": "Mirko Jelic",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Mirko965/My-Proposal/issues"
+    "url": "https://github.com/Mirko965/my-props/issues"
   },
-  "homepage": "https://github.com/Mirko965/My-Proposal#readme",
+  "homepage": "https://github.com/Mirko965/my-props#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
