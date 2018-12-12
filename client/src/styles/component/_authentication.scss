@@ -1,0 +1,72 @@
+.authentication {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  h1 {
+    margin: 2rem 0;
+  }
+}
+
+.authentication__text {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+  overflow-wrap: break-word;
+  padding: 1rem;
+  width: 80%;
+  p {
+    font-weight: 400;
+    font-style: normal;
+    font-size: 21px;
+    line-height: 1.58;
+    letter-spacing: -.003em;
+    font-family: medium-content-serif-font,Georgia,Cambria,"Times New Roman",Times,serif;
+
+  }
+}
+
+.text__code {
+
+  background-color: #e4f8ff;
+
+  word-break: break-all;
+  white-space: nowrap;
+  padding: 1rem;
+  margin: 0 auto;
+  text-overflow: clip;
+  width: 100%;
+}
+
+.code {
+  overflow-wrap: break-word;
+  p {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+}
+
+.const {
+  color: blue;
+}
+
+.comment {
+  color: grey;
+}
+
+.varname {
+  font-weight: bolder;
+}
+
+.function {
+  color: #b72309;
+}
+
+.string {
+  color: darkgreen;
+}
+
+.authentication__button {
+  margin: 1rem 0 3rem;
+}

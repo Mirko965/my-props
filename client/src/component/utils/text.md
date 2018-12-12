@@ -12,7 +12,18 @@
 </pre>
 2
 <p>Use token from mongoDB and set token in http header (express)</p>
-<code>res.header('Authorization', token).send(user)</p>             
+<code>
+router.post('/login',(req,res) => {
+   const { email,password } = req.body    
+   try {    
+      const user = loginUser(email, password)                    
+      const token = user.tokens[0].token
+      res.header('Authorization', token).send(user)
+        } catch (err) {
+          return res.status(400).send(err)
+        }
+      })
+      </p>             
 3
 <p>use token from header, after login</p>
 
@@ -91,7 +102,7 @@ const loginUser = (user) => dispatch => {
 }
 </code>
 </pre>
-<h4>Set token in react</h4>
+<h3>Set token in react</h3>
 <pre>
 <code>
 const setAuthToken = token => {

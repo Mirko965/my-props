@@ -14,11 +14,8 @@ const findByToken = async (token) => {
 
   try {
     const decoded = jwt.verify(token,secret)
-    console.log(decoded)
     const _id = ObjectID(decoded._id)
-
     const user = await db.collection('users').findOne({_id})
-    console.log(user)
     return user
   } catch (e) {
     throw e
