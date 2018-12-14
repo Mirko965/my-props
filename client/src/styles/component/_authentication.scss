@@ -7,44 +7,39 @@
   }
 }
 
+.item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .authentication__text {
   align-items: center;
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   margin-bottom: 3rem;
-  overflow-wrap: break-word;
   padding: 1rem;
   width: 80%;
   p {
-    font-weight: 400;
-    font-style: normal;
-    font-size: 21px;
-    line-height: 1.58;
-    letter-spacing: -.003em;
     font-family: medium-content-serif-font,Georgia,Cambria,"Times New Roman",Times,serif;
-
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: -.003em;
+    line-height: 1.58;
   }
 }
 
 .text__code {
 
   background-color: #e4f8ff;
-
-  word-break: break-all;
-  white-space: nowrap;
-  padding: 1rem;
-  margin: 0 auto;
-  text-overflow: clip;
+  padding: 0 2rem;
   width: 100%;
 }
 
 .code {
-  overflow-wrap: break-word;
-  p {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
+  align-self: auto;
 }
 
 .const {
@@ -69,4 +64,59 @@
 
 .authentication__button {
   margin: 1rem 0 3rem;
+}
+
+@media (max-width: 700px) {
+  .authentication {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    h2 {
+      padding: 1rem 2rem;
+    }
+    h3 {
+      margin: 1rem ;
+    }
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .authentication__text {
+    align-items: flex-start;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    margin: 3rem 0;
+    padding: 0;
+    width: 100%;
+    p {
+      font-family: medium-content-serif-font,Georgia,Cambria,"Times New Roman",Times,serif;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 100;
+      letter-spacing: -.003em;
+      line-height: 1.58;
+      padding: 0 1rem;
+    }
+  }
+  .text__code {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-color: #e4f8ff;
+    padding: 0;
+    margin-left: .5rem;
+    max-width: 100%;
+  }
+  .code {
+    padding: 0 .5rem;
+  }
+  .pre {
+    padding: 1rem;
+    width: 0rem;
+  }
 }

@@ -10,7 +10,7 @@ const getUserByUserName = async (username) => {
 
   try {
     const user = await db.collection('users').findOne({username})
-    console.log(username)
+
     if (user){
       return user
     } return {noUser:'User not found'}

@@ -9,3 +9,11 @@
 .main > * {
   flex: 1 100%;
 }
+
+@media (max-width: 675px) {
+  display: flex;
+  flex-direction: column;
+  flex-flow: row wrap;
+  //justify-content: space-between;
+  //min-height: max-content;
+}

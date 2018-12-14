@@ -11,7 +11,7 @@
   color: white;
   display: flex;
   flex-direction: column;
-  padding: 2rem 0;
+  padding: 2rem;
   h1 {
     color: #e12b0b;
   }
@@ -22,3 +22,12 @@
   padding: 1.8rem 0 8.6rem;
 }
 
+@media (max-width: 420px) {
+  .landing__image {
+    margin: 10rem auto 15rem;
+    padding: 2rem .5rem;
+    img {
+      width: 250px;
+    }
+  }
+}

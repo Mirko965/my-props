@@ -8,7 +8,6 @@ const dbName = process.env.DB_NAME
 const logoutUser = async (username) => {
   const client = await MongoClient.connect(url,{ useNewUrlParser: true })
   const db = await client.db(dbName)
-  console.log('from mongo: ',username)
   try {
     const remove = await db.collection('users')
       .findOneAndUpdate(
