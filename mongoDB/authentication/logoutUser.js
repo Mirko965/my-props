@@ -15,9 +15,6 @@ const logoutUser = async (username) => {
         {$pull: {tokens: {}}},
         {returnOriginal: false})
 
-
-    console.log('from mongo',remove)
-
     if (remove.value !== null) {
       return remove.value
     } return createError(400,'You was already logout!!')

@@ -4,6 +4,7 @@
   flex-flow: row wrap;
   justify-content: space-around;
   min-height: max-content;
+  width: 100%;
 }
 
 .main > * {
@@ -11,9 +12,14 @@
 }
 
 @media (max-width: 675px) {
-  display: flex;
-  flex-direction: column;
-  flex-flow: row wrap;
-  //justify-content: space-between;
-  //min-height: max-content;
+  .main {
+    display: flex;
+    flex-direction: column;
+    flex-flow: row wrap;
+    min-height: max-content;
+    width: 100%;
+  }
+  #root {
+    width: 100%;
+  }
 }

@@ -91,4 +91,9 @@
   border-style: solid;
 }
 
-
+@media (max-width: 675px) {
+  .form__input {
+    min-width: 32rem;
+    padding: .5rem 0;
+  }
+}

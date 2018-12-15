@@ -45,3 +45,23 @@
   word-break: break-all;
   margin: 0 0 $l-size 0;
 }
+@media (max-width: 675px) {
+
+  .login__modal {
+    background: #d7d7d7;
+    max-width: 27rem;
+    padding: $s-size;
+    ;
+  }
+  .register__modal {
+    background: #d7d7d7;
+    max-width: 27rem;
+    padding: $l-size;
+  }
+  .ReactModalPortal .ReactModal__Overlay--after-open {
+    opacity: 1;
+    max-width: 35rem;
+    margin: 0;
+    padding: 0;
+  }
+}
