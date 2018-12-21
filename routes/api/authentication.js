@@ -88,7 +88,7 @@ router.get('/register/:username', asyncHandler(async (req,res) => {
 
   try {
     await insertUser(username)
-    return res.redirect('http://mirkojelic.com/verify')
+    return res.redirect('http://www.mirkojelic.com/verify')
   } catch (err) {
     return res.status(400).json(errors)
   }
