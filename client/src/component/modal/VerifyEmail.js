@@ -3,7 +3,6 @@ import Modal from 'react-modal'
 
 Modal.setAppElement(document.getElementById('root'))
 const VerifyEmail = (props) => {
-  console.log(props)
   return (
     <Modal
       overlayClassName='login__modal--overlay'
@@ -16,6 +15,7 @@ const VerifyEmail = (props) => {
       <div className='form'>
         <h1>Verify your email address</h1>
         <p>Checkout your email, and click on link, </p>
+        <p>{props.message}</p>
       </div>
     </Modal>
   )

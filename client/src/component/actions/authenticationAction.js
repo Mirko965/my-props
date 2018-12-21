@@ -1,12 +1,31 @@
 import axios from 'axios'
 import { modalLoginClose, modalRegisterClose, modalVerifyEmailOpen } from './modalAction'
 import setAuthToken from '../utils/setAuthToken'
+import { clearErrors } from './errorsAction'
 //import { eraseCookie, setCookie } from '../utils/cookie'
 
 //const cookieName = 'my-proposal'
-export const registerUser = (user) => dispatch => {
-  axios.post('api/users/register',user)
-    .then(() => {
+export const temporaryRegisterUser = (user) => dispatch => {
+  dispatch(clearErrors())
+  axios.post('api/users/temporaryRegister',user)
+    .then((res) => {
+      dispatch({
+        type:'TEMPORARY_REGISTER_USER',
+        message:res.data.message
+      })
+      dispatch(modalRegisterClose())
+      dispatch(modalVerifyEmailOpen())
+    })
+    .catch(err => dispatch({
+      type:'GET_ERRORS',
+      errors:err.response.data
+    }))
+}
+
+export const registerUser = (username) => dispatch => {
+  axios.post(`api/users/register/${username}`)
+    .then((res) => {
+      console.log(res.data)
       dispatch({
         type:'REGISTER_USER'
       })

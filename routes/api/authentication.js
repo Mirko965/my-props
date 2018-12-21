@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser')
 const validateRegisterInput = require('../../validation/register')
 const validateLoginInput = require('../../validation/login')
+const {temporaryRegister} = require('../../mongoDB/authentication/temporaryRegister')
 const {getUserByToken} = require('../../mongoDB/authentication/getUserByToken')
 const {getUserByUserName} = require('../../mongoDB/authentication/getUserByUserName')
 const {logoutUser} = require('../../mongoDB/authentication/logoutUser')
@@ -18,7 +19,7 @@ router.get('/test', asyncHandler(async (req,res) => {
   res.json({Msg: 'text from test'})
 }))
 
-router.post('/register', asyncHandler(async (req,res) => {
+router.post('/temporaryRegister', asyncHandler(async (req,res) => {
   const {errors, isValid} = await validateRegisterInput(req.body)
   const {email, name, password,password2, username} = req.body
 
@@ -26,6 +27,16 @@ router.post('/register', asyncHandler(async (req,res) => {
     return res.status(400).json(errors);
   }
   try {
+
+    const user = await temporaryRegister(name, email, password, username)
+
+    if (user.errUsername){
+      errors.username = 'username already exist'
+      return res.status(400).send(errors)
+    } else if (user.errMail) {
+      errors.email = 'email already exist'
+      return res.status(400).send(errors)
+    }
 
     let transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -41,22 +52,19 @@ router.post('/register', asyncHandler(async (req,res) => {
       from: 'mirkojelic.jelic@gmail.com',
       to: 'mirkojelic.jelic@gmail.com',
       subject: 'Sending Email using Node.js',
-      html: `<p>Welcome to MERN</p>\n\n`+
-        `<link>http://localhost:5000/api/users/test</link>`
+      html: `<h2>Welcome to MERN</h2>\n\n`+
+        `<p>Click on the link below to verify your email address</p>\n\n`+
+        `<link>http://localhost:5000/api/users/register/${username}</link>`
     }
-
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
-        console.log(error);
+        res.status(400).send(error);
       } else {
-        console.log('Email sent: ' + info.response);
-        const user = await insertUser(name, email, password, username)
-        return res.send(user)
+        const message = 'Email sent: ' + info.response
+        return res.send({message})
       }
     });
     transporter.close()
-
-
 
   } catch (err) {
     if (err.code === 11000) {
@@ -71,6 +79,18 @@ router.post('/register', asyncHandler(async (req,res) => {
       errors.mongodb = err.name
       return res.status(400).send(errors)
     }
+  }
+}))
+
+router.get('/register/:username', asyncHandler(async (req,res) => {
+  const {errors} = await validateRegisterInput(req.body)
+  const username = req.params.username
+
+  try {
+    await insertUser(username)
+    return res.redirect('http://localhost:3000/verify')
+  } catch (err) {
+    return res.status(400).json(errors)
   }
 
 }))
@@ -98,34 +118,6 @@ router.post('/login', asyncHandler(async (req,res) => {
       const token = await user.tokens[0].token
       await res.cookie('my-proposal',token,options)
       await res.header('Authorization', token).send(user)
-
-
-      let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        tls: {
-          rejectUnauthorized: false
-        },
-        auth: {
-          user: 'mirkojelic.jelic@gmail.com',
-          pass: 'fionfion0000'
-        }
-      })
-      let mailOptions = {
-        from: 'mirkojelic.jelic@gmail.com',
-        to: email,
-        subject: 'Sending Email using Node.js',
-        html: `<p>Welcome to MERN</p>\n\n`+
-              `<link>http://localhost:5000/api/users/test</link>`
-      }
-
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-      transporter.close()
 
     } else {
       return res.status(400).json({user: undefined})
