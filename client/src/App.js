@@ -11,6 +11,7 @@ import isEmpty from './component/utils/isEmpty'
 const cookieName = 'my-proposal'
      const token = getCookie(cookieName)
 
+
     if (!isEmpty(token)){
       let decoded  = jwt.decode(token);
 

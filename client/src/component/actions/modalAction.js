@@ -11,3 +11,10 @@ export const modalLoginOpen = () => ({
 export const modalLoginClose = () => ({
   type:'MODAL_LOGIN_CLOSE'
 })
+
+export const modalVerifyEmailOpen = () => ({
+  type:'MODAL_VERIFYEMAIL_OPEN'
+})
+export const modalVerifyEmailClose = () => ({
+  type:'MODAL_VERIFYEMAIL_CLOSE'
+})

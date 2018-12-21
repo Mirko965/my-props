@@ -2,6 +2,7 @@ require('../../config/environment.js')
 const express = require('express')
 const router = express.Router()
 const asyncHandler = require('express-async-handler')
+const nodemailer = require('nodemailer');
 const cookieParser = require('cookie-parser')
 const validateRegisterInput = require('../../validation/register')
 const validateLoginInput = require('../../validation/login')
@@ -13,6 +14,7 @@ const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
 
 router.get('/test', asyncHandler(async (req,res) => {
+  res.cookie('testCookie','foo')
   res.json({Msg: 'text from test'})
 }))
 
@@ -24,8 +26,38 @@ router.post('/register', asyncHandler(async (req,res) => {
     return res.status(400).json(errors);
   }
   try {
-    const user = await insertUser(name, email, password, username)
-    return res.send(user)
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      tls: {
+        rejectUnauthorized: false
+      },
+      auth: {
+        user: 'mirkojelic.jelic@gmail.com',
+        pass: 'fionfion0000'
+      }
+    })
+    let mailOptions = {
+      from: 'mirkojelic.jelic@gmail.com',
+      to: 'mirkojelic.jelic@gmail.com',
+      subject: 'Sending Email using Node.js',
+      html: `<p>Welcome to MERN</p>\n\n`+
+        `<link>http://localhost:5000/api/users/test</link>`
+    }
+
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+        const user = await insertUser(name, email, password, username)
+        return res.send(user)
+      }
+    });
+    transporter.close()
+
+
+
   } catch (err) {
     if (err.code === 11000) {
       if (err.errmsg.includes(email)) {
@@ -44,6 +76,7 @@ router.post('/register', asyncHandler(async (req,res) => {
 }))
 
 router.post('/login', asyncHandler(async (req,res) => {
+
   const {errors, isValid} = await validateLoginInput(req.body)
   const {email,password} = req.body
   if (!isValid){
@@ -55,8 +88,45 @@ router.post('/login', asyncHandler(async (req,res) => {
       if (user.tokens === undefined) {
         return res.status(400).json(user)
       }
+
+      let options = {
+        maxAge: 1000 * 60 * 60 * 24, // would expire after 24 hours
+        //httpOnly: true, // The cookie only accessible by the web server
+        //signed: true // Indicates if the cookie should be signed
+      }
+
       const token = await user.tokens[0].token
+      await res.cookie('my-proposal',token,options)
       await res.header('Authorization', token).send(user)
+
+
+      let transporter = nodemailer.createTransport({
+        service: 'gmail',
+        tls: {
+          rejectUnauthorized: false
+        },
+        auth: {
+          user: 'mirkojelic.jelic@gmail.com',
+          pass: 'fionfion0000'
+        }
+      })
+      let mailOptions = {
+        from: 'mirkojelic.jelic@gmail.com',
+        to: email,
+        subject: 'Sending Email using Node.js',
+        html: `<p>Welcome to MERN</p>\n\n`+
+              `<link>http://localhost:5000/api/users/test</link>`
+      }
+
+      transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+      transporter.close()
+
     } else {
       return res.status(400).json({user: undefined})
     }
@@ -67,10 +137,14 @@ router.post('/login', asyncHandler(async (req,res) => {
 }))
 
 router.post('/logout',authenticate, asyncHandler(async (req,res) => {
+
   try {
     const username = req.user.username
     const logout = await logoutUser(username)
-
+    let options = {
+      maxAge: -(1000 * 60 * 60 * 24)
+    }
+    await res.cookie('my-proposal','',options)
     return res.send(logout)
   } catch (e) {
     return res.status(400).json(e)
@@ -85,8 +159,8 @@ router.get('/username/:username',authenticate, asyncHandler(async (req,res) => {
 
       const username = req.params.username
       const user = await getUserByUserName(username)
-      if (user) {
-        return res.header('Authorization', token).send(user)
+      if (user && cookie === token) {
+        return res.send(user)
       }
       if(user.noUser){
         errors.noUser = user.noUser
@@ -111,3 +185,4 @@ router.get('/me',authenticate, asyncHandler(async (req,res) => {
 }))
 
 module.exports = router
+

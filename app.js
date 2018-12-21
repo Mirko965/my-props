@@ -10,7 +10,7 @@ const app = express()
 
 app.use(cors())
 app.use(express.static(__dirname + '/public'))
-app.use(cookieParser())
+app.use(cookieParser('secret'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 

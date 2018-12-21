@@ -4,9 +4,16 @@ import { withRouter } from 'react-router-dom'
 import { loginUser, registerUser } from '../actions/authenticationAction'
 import RegisterModal from '../modal/RegisterModal'
 import { clearErrors } from '../actions/errorsAction'
-import { modalLoginClose, modalLoginOpen, modalRegisterClose, modalRegisterOpen } from '../actions/modalAction'
+import {
+  modalLoginClose,
+  modalLoginOpen,
+  modalRegisterClose,
+  modalRegisterOpen, modalVerifyEmailClose,
+  modalVerifyEmailOpen
+} from '../actions/modalAction'
 import AuthenticationText from './AuthenticationText'
 import LoginModal from '../modal/LoginModal'
+import VerifyEmail from '../modal/VerifyEmail'
 
 class Authentication extends Component {
   constructor (props) {
@@ -120,6 +127,11 @@ class Authentication extends Component {
           errors={errors}
         />
 
+        <VerifyEmail
+          isOpen={this.props.modal.modalVerifyEmailOpen}
+          onRequestClose={this.props.modal.modalVerifyEmailClose}
+        />
+
       </div>
     )
   }
@@ -134,4 +146,4 @@ const mapStateToProps = (state) => {
     modal:state.modal
   }
 }
-export default withRouter(connect(mapStateToProps, {registerUser,loginUser, clearErrors, modalRegisterOpen, modalRegisterClose,modalLoginOpen,modalLoginClose})(Authentication))
+export default withRouter(connect(mapStateToProps, {registerUser,loginUser, clearErrors, modalRegisterOpen, modalRegisterClose,modalLoginOpen,modalLoginClose, modalVerifyEmailOpen, modalVerifyEmailClose})(Authentication))

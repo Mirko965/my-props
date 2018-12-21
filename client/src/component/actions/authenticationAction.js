@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { modalLoginClose, modalLoginOpen, modalRegisterClose } from './modalAction'
+import { modalLoginClose, modalRegisterClose, modalVerifyEmailOpen } from './modalAction'
 import setAuthToken from '../utils/setAuthToken'
-import { eraseCookie, setCookie } from '../utils/cookie'
+//import { eraseCookie, setCookie } from '../utils/cookie'
 
-const cookieName = 'my-proposal'
+//const cookieName = 'my-proposal'
 export const registerUser = (user) => dispatch => {
   axios.post('api/users/register',user)
     .then(() => {
@@ -11,7 +11,7 @@ export const registerUser = (user) => dispatch => {
         type:'REGISTER_USER'
       })
       dispatch(modalRegisterClose())
-      dispatch(modalLoginOpen())
+      dispatch(modalVerifyEmailOpen())
     })
     .catch(err => dispatch({
       type:'GET_ERRORS',
@@ -26,14 +26,18 @@ export const loginUser = (user,history) => dispatch => {
       const token = res.data.tokens[0].token
       const username = res.data.username
       const avatar = res.data.avatar
-      setCookie(cookieName,token,15)
+      const name = res.data.name
+      const email = res.data.email
+      //setCookie(cookieName,token,15)
       setAuthToken(token)
       dispatch(modalLoginClose())
       dispatch(setCurrentUser(token))
       dispatch({
         type:'GET_CURRENT_USER',
         avatar,
-        username
+        username,
+        name,
+        email
       })
      history.push(`/${username}`)
     })
@@ -48,13 +52,16 @@ export const setCurrentUser = (token) => ({
   token
 })
 export const getCurrentUser = (username) => dispatch => {
-
+  dispatch(loadingUser())
   axios.get(`api/users/username/${username}`)
+
     .then(res => {
        dispatch({
          type:'GET_CURRENT_USER',
          avatar:res.data.avatar,
          username:res.data.username,
+         name:res.data.name,
+         email:res.data.email
        })
     })
     .catch(err => {
@@ -68,7 +75,7 @@ export const logoutUser = () => dispatch => {
   axios.post('api/users/logout')
     .then(() => {
       setAuthToken(false)
-      eraseCookie(cookieName)
+      //eraseCookie(cookieName)
 
     }).then(() => {
     dispatch({
@@ -81,4 +88,10 @@ export const logoutUser = () => dispatch => {
       type:'GET_ERRORS',
       errors:err.response.data
     })})
+}
+
+export const loadingUser = () => {
+  return {
+    type: 'LOADING_USER'
+  }
 }

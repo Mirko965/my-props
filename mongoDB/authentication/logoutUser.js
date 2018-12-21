@@ -17,7 +17,7 @@ const logoutUser = async (username) => {
 
     if (remove.value !== null) {
       return remove.value
-    } return createError(400,'You was already logout!!')
+    } return {error:'You was already logout!!'}
 
   } catch (err) {
     throw err

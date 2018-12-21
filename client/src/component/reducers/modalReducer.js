@@ -1,6 +1,7 @@
 const initialState = {
   modalRegisterIsOpen:false,
-  modalLoginIsOpen:false
+  modalLoginIsOpen:false,
+  modalVerifyEmailIsOpen:false
 }
 
 const modalReducer = (state = initialState, action) => {
@@ -13,6 +14,10 @@ const modalReducer = (state = initialState, action) => {
       return {modalLoginIsOpen:true}
     case 'MODAL_LOGIN_CLOSE':
       return {modalLoginIsOpen:false}
+    case 'MODAL_VERIFYEMAIL_OPEN':
+      return {modalVerifyEmailIsOpen:true}
+    case 'MODAL_VERIFYEMAIL_CLOSE':
+      return {modalVerifyEmailIsOpen:false}
     default:
       return state
   }

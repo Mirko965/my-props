@@ -9,7 +9,6 @@ const AuthenticationText = () => {
 
       <h2>Server Side</h2>
 
-     {/* <div className='item'>*/}
         <h3>1). store token in mongodb</h3>
 
         <div className='text__code'>
