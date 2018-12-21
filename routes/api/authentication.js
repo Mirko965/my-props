@@ -50,7 +50,7 @@ router.post('/temporaryRegister', asyncHandler(async (req,res) => {
     })
     let mailOptions = {
       from: 'mirkojelic.jelic@gmail.com',
-      to: 'mirkojelic.jelic@gmail.com',
+      to: email,
       subject: 'Sending Email using Node.js',
       html: `<h2>Welcome to MERN</h2>\n\n`+
         `<p>Click on the link below to verify your email address</p>\n\n`+
