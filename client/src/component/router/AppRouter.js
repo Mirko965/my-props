@@ -6,6 +6,7 @@ import Footer from '../layout/Footer'
 import Authentication from '../authentication/Authentication'
 import PrivateRoute from '../common/PrivateRoute'
 import PrivatePage from '../authentication/PrivatePage'
+import VerifyEmail from '../authentication/VerifyEmail'
 
 const AppRouter = () => {
   return (
@@ -15,6 +16,7 @@ const AppRouter = () => {
         <Switch>
           <Route exact path='/' component={Landing}/>
           <Route exact path='/authentication' component={Authentication}/>
+          <Route exact path='/verify' component={VerifyEmail}/>
           <PrivateRoute exact path='/:username' component={PrivatePage}/>
         </Switch>
         <Footer/>

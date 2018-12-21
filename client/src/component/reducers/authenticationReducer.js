@@ -4,7 +4,8 @@ const initialState = {
   isAuthenticate:false,
   avatar:'',
   username:'',
-  loading:false
+  loading:false,
+  emailMessage:''
 }
 
 export const authenticationReducer = (state = initialState ,action) => {
@@ -13,6 +14,10 @@ export const authenticationReducer = (state = initialState ,action) => {
       return {
         ...state,
         loading: true
+      }
+    case 'TEMPORARY_REGISTER_USER':
+      return {...state,
+        emailMessage:action.message
       }
     case 'REGISTER_USER':
       return {...state}

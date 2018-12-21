@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import connect from 'react-redux/es/connect/connect'
 import { withRouter } from 'react-router-dom'
-import { loginUser, registerUser } from '../actions/authenticationAction'
+import { loginUser, registerUser, temporaryRegisterUser } from '../actions/authenticationAction'
 import RegisterModal from '../modal/RegisterModal'
 import { clearErrors } from '../actions/errorsAction'
 import {
@@ -50,6 +50,9 @@ class Authentication extends Component {
   loginModalClose = () => {
     this.props.modalLoginClose()
   }
+  emailModalClose = () => {
+    this.props.modalVerifyEmailClose()
+  }
   onChange = (event) => {
     event.persist()
     this.setState(() => ({
@@ -66,7 +69,7 @@ class Authentication extends Component {
       password: this.state.password,
       password2: this.state.password2,
     }
-    this.props.registerUser(user)
+    this.props.temporaryRegisterUser(user)
     this.setState(() => ({
       name: '',
       email: '',
@@ -128,8 +131,9 @@ class Authentication extends Component {
         />
 
         <VerifyEmail
-          isOpen={this.props.modal.modalVerifyEmailOpen}
-          onRequestClose={this.props.modal.modalVerifyEmailClose}
+          isOpen={this.props.modal.modalVerifyEmailIsOpen}
+          onRequestClose={this.emailModalClose}
+          message={this.props.authentication.emailMessage}
         />
 
       </div>
@@ -141,9 +145,19 @@ class Authentication extends Component {
 const mapStateToProps = (state) => {
 
   return {
-    authentication:state.authentication,
+    authentication:state.authenticate,
     errors:state.errors,
     modal:state.modal
   }
 }
-export default withRouter(connect(mapStateToProps, {registerUser,loginUser, clearErrors, modalRegisterOpen, modalRegisterClose,modalLoginOpen,modalLoginClose, modalVerifyEmailOpen, modalVerifyEmailClose})(Authentication))
+export default withRouter(connect(mapStateToProps, {
+  temporaryRegisterUser,
+  registerUser,
+  loginUser,
+  clearErrors,
+  modalRegisterOpen,
+  modalRegisterClose,
+  modalLoginOpen,
+  modalLoginClose,
+  modalVerifyEmailOpen,
+  modalVerifyEmailClose})(Authentication))
