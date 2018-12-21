@@ -54,7 +54,7 @@ router.post('/temporaryRegister', asyncHandler(async (req,res) => {
       subject: 'Sending Email using Node.js',
       html: `<h2>Welcome to MERN</h2>\n\n`+
         `<p>Click on the link below to verify your email address</p>\n\n`+
-        `<link>http://localhost:5000/api/users/register/${username}</link>`
+        `<link>http://www.mirkojelic.com/api/users/register/${username}</link>`
     }
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
