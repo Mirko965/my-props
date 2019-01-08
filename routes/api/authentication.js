@@ -23,7 +23,7 @@ const {authenticate} = require('../../middleware/authenticate')
 const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
 const url = process.env.URL
-const urlClient = process.env.URL_CLIENT
+//const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
 const authPass = process.env.EMAIL_PASS
 const secret = process.env.JWT_SECRET
@@ -106,7 +106,7 @@ router.get('/register/:token', asyncHandler(async (req,res) => {
     const decode = jwt.decode(token)
     const username = decode.username
     await insertUser(username)
-    return res.redirect(`${urlClient}/verifyRegistration`)
+    return res.redirect(`${url}/verifyRegistration`)
   } catch (err) {
     return res.status(400).json(errors)
   }

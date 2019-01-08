@@ -203,7 +203,7 @@ export const resPassword = (newPassword,newPassword2,history) => dispatch => {
 
     axios({
       method: 'post',
-      url: `http://localhost:5000/api/users/resetPassword/${username}`,
+      url: `api/users/resetPassword/${username}`,
       data: {
         newPassword,
         newPassword2
@@ -230,7 +230,7 @@ export const resPassword = (newPassword,newPassword2,history) => dispatch => {
 export const getUserForResetPassword = (username) => dispatch => {
   dispatch(loadingUser())
 
-  axios.get(`http://localhost:5000/api/users/resetPassword/${username}`)
+  axios.get(`api/users/resetPassword/${username}`)
 
     .then(res => {
       //eraseCookie('reset-password')
