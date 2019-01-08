@@ -24,7 +24,7 @@ const AppRouter = () => {
           <Route exact path='/forgotPassword' component={VerifyPassword}/>
           <Route exact path='/verifyPassword' component={VerifyPassword}/>
           <PrivateRoute exact path='/:username' component={PrivatePage}/>
-          <PrivateRoute exact path='/resetPassword/:username' component={ResetPassword}/>
+          <Route exact path='/resetPassword/:username' component={ResetPassword}/>
           <Route component={PageNotFound}/>
         </Switch>
         <Footer/>
