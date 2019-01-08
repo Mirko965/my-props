@@ -263,7 +263,7 @@ router.get('/changePassword/:username',authenticate, asyncHandler(async (req,res
     const decode = jwt.decode(token,secret)
     const username = decode.username
     await changePassword(username)
-    res.redirect(`http://localhost:3000/verifyPassword`)
+    res.redirect(`${url}/verifyPassword`)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -295,7 +295,7 @@ router.get('/mailForResetPassword/:email', asyncHandler(async (req,res) => {
         subject: 'Sending Email using Node.js',
         html: `<h2>Welcome to MERN</h2>\n\n`+
           `<p>Click on the link below to reset your password</p>\n\n`+
-          `<link>http://localhost:3000/resetPassword/${token}</link>`
+          `<link>${url}/resetPassword/${token}</link>`
       }
       transporter.sendMail(mailOptions, async (error, info) => {
         if (error) {
