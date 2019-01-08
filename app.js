@@ -6,16 +6,16 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const users = require('./routes/api/authentication')
 
+
 const app = express()
 
 app.use(cors())
 app.use(express.static(__dirname + '/public'))
-app.use(cookieParser('secret'))
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use('/api/users',users)
-
 
 if (process.env.NODE_ENV === 'production'){
   app.use(express.static('client/build'))

@@ -2,7 +2,7 @@ import React from 'react'
 import TextFieldGroup from '../common/TextFieldGroup'
 import Modal from 'react-modal'
 
-Modal.setAppElement(document.getElementById('root'))
+
 const RegisterModal = (props) => {
   
     return (
@@ -12,11 +12,12 @@ const RegisterModal = (props) => {
           closeTimeoutMS={300}
           className='register__modal'
           contentLabel="Register Modal"
+          appElement={document.getElementById('root')}
         >
 
           <div className='form'>
             <h1>Sign Up</h1>
-            <p>Create your account</p>
+            {props.errors.mongodb ? <p className='errorText'>{props.errors.mongodb}</p> : <p>Create your account</p>}
             <form className='form__input' onSubmit={props.onSubmit}>
               <TextFieldGroup
                 type='text'
@@ -24,7 +25,7 @@ const RegisterModal = (props) => {
                 name='name'
                 value={props.nameValue}
                 onChange={props.onChange}
-                error={props.nameError}
+                error={props.errors.name}
               />
               <TextFieldGroup
                 type='email'
@@ -32,7 +33,7 @@ const RegisterModal = (props) => {
                 name='email'
                 value={props.emailValue}
                 onChange={props.onChange}
-                error={props.emailError}
+                error={props.errors.email}
               />
               <TextFieldGroup
                 type='text'
@@ -40,7 +41,7 @@ const RegisterModal = (props) => {
                 name='username'
                 value={props.usernameValue}
                 onChange={props.onChange}
-                error={props.usernameError}
+                error={props.errors.username}
               />
               <TextFieldGroup
                 type='password'
@@ -48,15 +49,15 @@ const RegisterModal = (props) => {
                 name='password'
                 value={props.passValue}
                 onChange={props.onChange}
-                error={props.passError}
+                error={props.errors.password}
               />
               <TextFieldGroup
                 type='password'
-                placeholder='Password'
+                placeholder='Confirm Password'
                 name='password2'
                 value={props.pass2Value}
                 onChange={props.onChange}
-                error={props.pass2Error}
+                error={props.errors.password2}
               />
               <button className='form__input--button'>Submit</button>
             </form>

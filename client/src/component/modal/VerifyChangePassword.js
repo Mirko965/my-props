@@ -2,7 +2,8 @@ import React from 'react'
 import Modal from 'react-modal'
 
 
-const VerifyEmail = (props) => {
+const VerifyChangePassword = (props) => {
+  const {message} = props.message
   return (
     <Modal
       overlayClassName='login__modal--overlay'
@@ -14,12 +15,12 @@ const VerifyEmail = (props) => {
       appElement={document.getElementById('root')}
     >
       <div className='form'>
-        <h1>Verify your email address</h1>
-        <p>Checkout your email, and click on link, </p>
-        <p>{props.message}</p>
+        <h1>Check your email address</h1>
+        <p>Checkout your email, and click on link to change password, </p>
+        <p>{message}</p>
       </div>
     </Modal>
   )
 }
 
-export default VerifyEmail
+export default VerifyChangePassword

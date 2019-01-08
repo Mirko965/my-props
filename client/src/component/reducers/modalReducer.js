@@ -1,7 +1,12 @@
 const initialState = {
   modalRegisterIsOpen:false,
   modalLoginIsOpen:false,
-  modalVerifyEmailIsOpen:false
+  modalVerifyEmailIsOpen:false,
+  modalChangePasswordIsOpen:false,
+  modalForgotPasswordIsOpen:false,
+  modalVerifyPasswordIsOpen:false,
+  modalForgotPasswordVerifyIsOpen:false,
+  modalChangePasswordVerifyIsOpen:false
 }
 
 const modalReducer = (state = initialState, action) => {
@@ -18,6 +23,26 @@ const modalReducer = (state = initialState, action) => {
       return {modalVerifyEmailIsOpen:true}
     case 'MODAL_VERIFYEMAIL_CLOSE':
       return {modalVerifyEmailIsOpen:false}
+    case 'MODAL_VERIFYPASSWORD_OPEN':
+      return {modalVerifyPasswordIsOpen:true}
+    case 'MODAL_VERIFYPASSWORD_CLOSE':
+      return {modalVerifyPasswordIsOpen:false}
+    case 'MODAL_CHANGE_PASSWORD_OPEN':
+      return {modalChangePasswordIsOpen:true}
+    case 'MODAL_CHANGE_PASSWORD_CLOSE':
+      return {modalChangePasswordIsOpen:false}
+    case 'MODAL_FORGOT_PASSWORD_OPEN':
+      return {modalForgotPasswordIsOpen:true}
+    case 'MODAL_FORGOT_PASSWORD_CLOSE':
+      return {modalForgotPasswordIsOpen:false}
+    case 'MODAL_FORGOT_PASSWORD_VERIFY_OPEN':
+      return {modalForgotPasswordVerifyIsOpen:true}
+    case 'MODAL_FORGOT_PASSWORD_VERIFY_CLOSE':
+      return {modalForgotPasswordVerifyIsOpen:false}
+    case 'MODAL_CHANGE_PASSWORD_VERIFY_OPEN':
+      return {modalChangePasswordVerifyIsOpen:true}
+    case 'MODAL_CHANGE_PASSWORD_VERIFY_CLOSE':
+      return {modalChangePasswordVerifyIsOpen:false}
     default:
       return state
   }

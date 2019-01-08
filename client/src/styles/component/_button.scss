@@ -1,3 +1,62 @@
+button {
+  background-color: $button-color;
+  border: 0;
+  border-bottom: 3px solid darken($button-color, 30%);
+  color: #ffffff;
+  cursor: pointer;
+  //min-width: 13rem;
+  outline: 0;
+  padding: .5rem .8rem;
+}
+
+button:hover {
+  background-color: darken($button-color, 20%);
+}
+
+.button__light {
+  display:inline-block;
+  box-sizing: border-box;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  margin: 0 1rem;
+  width: 35px;
+  outline:none;
+  padding: 0 .5rem;
+}
+
+.button__light:hover {
+  background: none;
+}
+
+.button__small {
+  border-radius: 5px;
+  font-size: small;
+  margin: 1rem;
+  padding: .3rem;
+  text-align: center;
+}
+
+.button-danger {
+  background-color: #e12b0b;
+  border: 0;
+  border-radius: 5px;
+  border-bottom: 1px solid darken(#b72309, 10%);
+  color: #ffffff;
+  cursor: pointer;
+  min-width: 0rem;
+  padding: .5rem .8rem;
+}
+
+.button-danger:hover {
+  background-color: darken(#e12b0b, 10%);
+  color: black;
+}
+
+button:disabled:hover {
+  cursor: default;
+}
+
 .button__small {
   border-radius: 5px;
   font-size: small;
@@ -33,4 +92,19 @@
   background-color: white;
   border: 0;
   outline: 0;
+}
+
+.button__forgot--password {
+  background-color: inherit;
+  border: 0;
+  color:#a2cad7;
+  margin: 1rem 0 2rem;
+  padding: 0;
+  outline: 0;
+  text-align: right;
+}
+
+.button__forgot--password:hover {
+  background-color: inherit;
+  color: #83a4ae;
 }

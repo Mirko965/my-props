@@ -1,0 +1,53 @@
+.private__content {
+  display: block;
+}
+
+.private {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  h1 {
+    padding: 2rem 0;
+  }
+  h3 {
+    font-size: 16px;
+    padding: 2rem 1rem;
+  }
+  p {
+    padding: 0 1rem;
+  }
+}
+
+.private__creds {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+}
+
+.text__code--test {
+  background-color: #e4f8ff;
+  width: 95%;
+}
+
+
+@media screen and (min-width: $desktop){
+  .private {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4rem;
+    h1 {
+      padding: 4rem 0;
+    }
+  }
+  .private__creds {
+    align-items: center;
+    background-color: whitesmoke;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 5rem;
+    width: 60%;
+  }
+}

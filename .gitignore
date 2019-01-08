@@ -4,3 +4,4 @@ package-lock.json
 /config/environment.json
 client/package-lock.json
 client/node_modules
+/ssl

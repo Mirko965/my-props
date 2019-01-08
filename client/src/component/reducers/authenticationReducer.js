@@ -4,8 +4,10 @@ const initialState = {
   isAuthenticate:false,
   avatar:'',
   username:'',
+  password:'',
+  email:'',
   loading:false,
-  emailMessage:''
+  message:''
 }
 
 export const authenticationReducer = (state = initialState ,action) => {
@@ -16,8 +18,13 @@ export const authenticationReducer = (state = initialState ,action) => {
         loading: true
       }
     case 'TEMPORARY_REGISTER_USER':
-      return {...state,
-        emailMessage:action.message
+    return {...state,
+      message:action.message
+      }
+    case 'TEMPORARY_PASSWORD':
+      return {
+        ...state,
+        message:action.message
       }
     case 'REGISTER_USER':
       return {...state}
@@ -27,7 +34,6 @@ export const authenticationReducer = (state = initialState ,action) => {
         isAuthenticate: !isEmpty(action.token)
       }
     case 'GET_CURRENT_USER':
-
       return {
         ...state,
         avatar: action.avatar,
@@ -36,12 +42,37 @@ export const authenticationReducer = (state = initialState ,action) => {
         email:action.email,
         loading:false
       }
+    case 'GET_USER_FOR_RESET_PASSWORD':
+      return {
+        ...state,
+        isAuthenticate:false,
+        avatar: action.avatar,
+        username:action.username,
+        loading:false
+      }
     case 'LOGOUT_USER':
       return {
         ...state,
         isAuthenticate:false,
         avatar:'',
         username:''
+      }
+    case 'REMOVE_USER':
+      return {
+        isAuthenticate:false,
+        avatar:'',
+        username:'',
+        loading:false,
+        message:''
+      }
+    case 'RESET_PASSWORD':
+      return {
+        ...state,
+        username:action.username,
+        isAuthenticate:action.isAuthenticate,
+        avatar:action.avatar,
+        email:action.email,
+        message:action.message
       }
     default:
       return state

@@ -23,7 +23,10 @@
   outline: none;
   max-width: 60rem;
   padding: $l-size;
-  text-align: center;
+  text-align: right;
+  small {
+    padding: 1rem 0;
+  }
 }
 
 .login__modal--overlay {
@@ -54,7 +57,7 @@
   word-break: break-all;
   margin: 0 0 $l-size 0;
 }
-@media (max-width: 675px) {
+@media (max-width: 411px) {
 
   .login__modal {
     background: #d7d7d7;

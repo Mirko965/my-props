@@ -1,10 +1,16 @@
 import React, { Component } from 'react'
 import connect from 'react-redux/es/connect/connect'
 import { withRouter } from 'react-router-dom'
-import { loginUser, registerUser, temporaryRegisterUser } from '../actions/authenticationAction'
+import {
+  loginUser,
+  mailForResetPassword,
+  registerUser,
+  temporaryRegisterUser
+} from '../actions/authenticationAction'
 import RegisterModal from '../modal/RegisterModal'
 import { clearErrors } from '../actions/errorsAction'
 import {
+  modalForgotPasswordClose, modalForgotPasswordOpen, modalForgotPasswordVerifyClose, modalForgotPasswordVerifyOpen,
   modalLoginClose,
   modalLoginOpen,
   modalRegisterClose,
@@ -14,6 +20,9 @@ import {
 import AuthenticationText from './AuthenticationText'
 import LoginModal from '../modal/LoginModal'
 import VerifyEmail from '../modal/VerifyEmail'
+import ForgotPasswordModal from '../modal/ForgotPasswordModal'
+import VerifyForgotPassword from '../modal/VerifyForgotPassword'
+import VerifyChangePassword from '../modal/VerifyChangePassword'
 
 class Authentication extends Component {
   constructor (props) {
@@ -50,8 +59,15 @@ class Authentication extends Component {
   loginModalClose = () => {
     this.props.modalLoginClose()
   }
+  forgotPasswordModalClose = () => {
+    this.props.clearErrors()
+    this.props.modalForgotPasswordClose()
+  }
   emailModalClose = () => {
     this.props.modalVerifyEmailClose()
+  }
+  emailForgotPasswordModalClose = () => {
+    this.props.modalForgotPasswordVerifyClose()
   }
   onChange = (event) => {
     event.persist()
@@ -84,6 +100,7 @@ class Authentication extends Component {
       email:this.state.email,
       password: this.state.password
     }
+
     this.props.loginUser(user,this.props.history)
     this.setState(() => ({
       email: '',
@@ -91,9 +108,24 @@ class Authentication extends Component {
     }))
   }
 
+  forgotPasswordOnChange = event => {
+    event.persist()
+    this.setState(() => ({
+      [event.target.name]: event.target.value
+    }))
+  }
+  forgotPasswordSubmit = event => {
+    event.preventDefault()
+    this.props.mailForResetPassword(this.state.email,this.props.history)
+    this.setState(() => ({
+      email:''
+    }))
+  }
+
   render () {
 
     const {errors} = this.state
+    const {message} = this.props.authentication
 
     return (
 
@@ -110,15 +142,11 @@ class Authentication extends Component {
           onRequestClose={this.registerModalClose}
           onSubmit={this.onSubmit}
           nameValue={this.state.name}
-          nameError={errors.name}
           emailValue={this.state.email}
-          emailError={errors.email}
           usernameValue={this.state.username}
-          usernameError={errors.username}
           passValue={this.state.password}
-          passError={errors.password}
           pass2Value={this.state.password2}
-          pass2Error={errors.password2}
+          errors={errors}
         />
         <LoginModal
           isOpen={this.props.modal.modalLoginIsOpen}
@@ -133,7 +161,28 @@ class Authentication extends Component {
         <VerifyEmail
           isOpen={this.props.modal.modalVerifyEmailIsOpen}
           onRequestClose={this.emailModalClose}
-          message={this.props.authentication.emailMessage}
+          message={message}
+        />
+
+        <VerifyChangePassword
+          isOpen={this.props.modal.modalChangePasswordVerifyIsOpen}
+          onRequestClose={this.emailModalClose}
+          message={message}
+        />
+
+        <VerifyForgotPassword
+          isOpen={this.props.modal.modalForgotPasswordVerifyIsOpen}
+          onRequestClose={this.emailForgotPasswordModalClose}
+          message={message}
+        />
+
+        <ForgotPasswordModal
+          isOpen={this.props.modal.modalForgotPasswordIsOpen}
+          onRequestClose={this.forgotPasswordModalClose}
+          onChange={this.forgotPasswordOnChange}
+          onSubmit={this.forgotPasswordSubmit}
+          value={this.state.email}
+          emailError={this.props.errors}
         />
 
       </div>
@@ -160,4 +209,11 @@ export default withRouter(connect(mapStateToProps, {
   modalLoginOpen,
   modalLoginClose,
   modalVerifyEmailOpen,
-  modalVerifyEmailClose})(Authentication))
+  modalVerifyEmailClose,
+  modalForgotPasswordOpen,
+  modalForgotPasswordClose,
+  mailForResetPassword,
+  modalForgotPasswordVerifyOpen,
+  modalForgotPasswordVerifyClose,
+
+})(Authentication))

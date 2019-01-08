@@ -2,16 +2,15 @@ import React from 'react'
 
 const AuthenticationText = () => {
   return (
-    <div className='authentication__text'>
+    <div className='private'>
       <h3>What is JSON Web Token</h3>
       <p>JSON Web Token is a JSON-based open standard for creating access tokens. Server could generate a token that has the claim logged in, and provide that to a client. The client could then use that token to prove that it is logged in . The tokens are signed by one party's private key (optional but recommended), so that both parties are able to verify that the token is legitimate.</p>
       <p>In authentication, when the user successfully logs in using their credentials, a JSON Web Token will be returned and must be saved locally (better cookie then local storage), instead of the traditional approach of creating a session in the server and returning a cookie.</p>
 
       <h2>Server Side</h2>
 
-        <h3>1). store token in mongodb</h3>
-
-        <div className='text__code'>
+      <h3>1). store token in mongodb</h3>
+      <div className='text__code--test'>
 
 
         <pre className='pre'>
@@ -19,17 +18,17 @@ const AuthenticationText = () => {
             <span className='const'>const </span>
             <span className='varname'>user</span>
             {
-            `= {
+              `= {
   _id: ObjectId(),
   username: "`}
-  <span className='string'>string</span>
+            <span className='string'>string</span>
             {`"
     }`
-          }
+            }
           </code>
         </pre>
 
-          <pre className='pre'>
+        <pre className='pre'>
           <code className='code'>
             <span className='const'>const </span>
             <span className='varname'>payload</span>
@@ -38,12 +37,12 @@ const AuthenticationText = () => {
   _id:user._id.`}
             <span className='function'>toHexString(), </span><br/>
             {
-                `  username:user.username
+              `  username:user.username
    } `}
             </code>
         </pre>
 
-          <pre className='pre'>
+        <pre className='pre'>
           <code className='code'>
           <span className='const'>const </span>
             <span className='varname'>token</span>
@@ -57,7 +56,7 @@ const AuthenticationText = () => {
            </code>
         </pre>
 
-          <pre className='pre'>
+        <pre className='pre'>
           <code className='code'>
             <span className='const'>const</span>
             <span className='varname'> userWithToken</span>
@@ -74,12 +73,41 @@ const AuthenticationText = () => {
     {returnOriginal: false})`}
           </code>
         </pre>
-        </div>
-     {/* </div>*/}
-
-
+        <pre className='pre'>
+          <code className='code'>
+          <span className='const'>const </span>
+            <span className='varname'>token</span>
+            {` = jwt.`}<span className='function'>sign</span>{`(
+    payload,
+    secret,
+   {expiresIn: "1h" }).`}
+            <span className='function'>
+              toString()
+            </span>
+           </code>
+        </pre>
+        <pre className='pre'>
+          <code className='code'>
+            <span className='const'>const</span>
+            <span className='varname'> userWithToken</span>
+            {` = db
+  .`}
+            collection
+            {`("`}
+            <span className='string'>users</span>{`")
+  .`}
+            <span className='function'>findOneAndUpdate</span>
+            {`(
+    {_id:user._id},
+    {$set: {tokens:[{ token }]}},
+    {returnOriginal: false})`}
+          </code>
+        </pre>
+      </div>
       <h3>2). Use token from mongoDB and set token in http header (express)</h3>
-      <div className='text__code'>
+
+
+      <div className='text__code--test'>
         <pre className='pre'>
           <code className='code'>
             {`router.`}<span className='function'>post</span>{`('/`}
@@ -89,15 +117,15 @@ const AuthenticationText = () => {
             <span className='varname'>email,password</span>{` } = req.body
  try {
   `}
-           <span className='const'>const</span>
+            <span className='const'>const</span>
             {` `}
-           <span className='varname'>user</span>
+            <span className='varname'>user</span>
             {` = loginUser(
             `}
             <span className='varname'>password,</span>
             <span className='varname'>email</span>{`)
   `}<span className='const'>const</span>{` `}
-      <span className='varname'>token</span>{` = user.tokens[0].token
+            <span className='varname'>token</span>{` = user.tokens[0].token
   res.`}<span className='function'>header</span>{`("`}
             <span className='string'>Authorization</span>
             {`",
@@ -109,9 +137,9 @@ const AuthenticationText = () => {
             <span className='varname'>user</span>{`)
  } catch (err) {
    return res.`}
-          <span className='function'>status</span>
+            <span className='function'>status</span>
             {`(400).`}
-          <span className='function'>send</span>
+            <span className='function'>send</span>
             {`(err)
         }
       })`}
@@ -124,7 +152,7 @@ const AuthenticationText = () => {
       <p>If verify token from header is O.K (token and secret in db is equal in header), decoded  id from token and use to find user in MongoDB</p>
 
 
-      <div className='text__code'>
+      <div className='text__code--test'>
        <pre className='pre'>
           <code className='code'>
             {
@@ -149,7 +177,7 @@ const AuthenticationText = () => {
             {`)
  `}<span className='const'>const</span>
             {` `}
-    <span className='varname'>_id</span>
+            <span className='varname'>_id</span>
             {`= ObjectID(decoded._id)
  `}<span className='const'>const</span>
             {` `}
@@ -159,7 +187,7 @@ const AuthenticationText = () => {
             {`")
      .findOne({_id})
     return `}
-    <span className='varname'>user</span>
+            <span className='varname'>user</span>
             {`
   } catch (e) {
     throw e
@@ -176,14 +204,17 @@ const AuthenticationText = () => {
         <li>How use token when refresh page</li>
         <li>How make private route(view only login user)</li>
       </ul>
+
+
+
       <h3>3). Get token from server side</h3>
 
-      <div className='text__code'>
+      <div className='text__code--test'>
         <pre className='pre'>
           <code className='code'>
             {
               ``}<span className='const'>const</span>{` `}
-              <span className='varname'>loginUser</span>
+            <span className='varname'>loginUser</span>
             {` = (user) =>
                 dispatch => {
    axios
@@ -214,22 +245,23 @@ const AuthenticationText = () => {
             {
               `(token)
  `}
+
+
             <span className='comment'>(//set token in react)</span>{`
-      dispatch(`}<span className='function'>setCurrentUser</span>
-            {`(token))        `}
-            {`
-    })
+      dispatch(`}
+            <span className='function'>setCurrentUser</span>
+            {`(token))`}
+            {`})
     .catch(err => dispatch({
       type:'GET_ERRORS',
       errors:err.response.data
-  }))
-}`}
+    }))
+  }`}
           </code>
         </pre>
       </div>
-
       <h3>4). Set token in header from client side</h3>
-      <div className='text__code'>
+      <div className='text__code--test'>
         <pre className='pre'>
           <code className='code'>
             {
@@ -256,13 +288,13 @@ const AuthenticationText = () => {
    maxContentLength: 50 * 1000 * 1000
     });
 `}
-    <span className='comment'>(// Apply to every request)</span>{`
+            <span className='comment'>(// Apply to every request)</span>{`
    axios.defaults
      .headers
      .common['Authorization'] = token;
   } else {
 `}
-    <span className='comment'>(// Delete auth header)</span>{`
+            <span className='comment'>(// Delete auth header)</span>{`
     delete axios
       .defaults
       .headers
@@ -272,22 +304,20 @@ const AuthenticationText = () => {
           </code>
         </pre>
       </div>
-
-
       <h3>5). Set and get and delete cookie</h3>
-      <div className='text__code'>
+      <div className='text__code--test'>
         <pre className='pre'>
           <code className='code'>
             {``}<span className='comment'>(// set cookie)</span>{`
 `}<span className='const'>const</span>{` `}
-   <span className='varname'>setCookie</span>
+            <span className='varname'>setCookie</span>
             {` = (name,value,days)
                 => {
 `}<span className='const'>let</span>{` `}
-  <span className='varname'>expires</span>{` = "";
+            <span className='varname'>expires</span>{` = "";
   if (days) {
     `}<span className='const'>let</span>{` `}
-    <span className='varname'>date</span>{` = new Date();
+            <span className='varname'>date</span>{` = new Date();
     `}<span className='varname'>date</span>
             {`.`}
             <span className='function'>setTime</span>
@@ -302,7 +332,7 @@ const AuthenticationText = () => {
             {`.`}<span className='function'>toUTCString</span>{`();
   }
   document.cookie = name + "`}
-  <span className='string'>=</span>
+            <span className='string'>=</span>
             {`" +
           `}<span className='string'>(value || "</span>
             {`")  +
@@ -330,8 +360,8 @@ const AuthenticationText = () => {
             .`}
             <span className='function'>filter</span>{`((cookie) =>
   name === `}
-  <span className='varname'>cookie</span>{`.`}
-  <span className='function'>substring</span>
+            <span className='varname'>cookie</span>{`.`}
+            <span className='function'>substring</span>
             {`(0,`}<span className='varname'>cookie</span>
             {`
             .`}<span className='function'>indexOf</span>
@@ -355,7 +385,7 @@ const AuthenticationText = () => {
             <span className='varname'>eraseCookie</span>
             {` = (name) => {
   document.`}
-  <span className='varname'>cookie</span>
+            <span className='varname'>cookie</span>
             {` = name +
             '`}
             <span className='string'>=; Max-Age=-99999999;</span>
@@ -367,17 +397,17 @@ const AuthenticationText = () => {
 
 
       <h3>6).What shall we do when refresh page ??</h3>
-      <div className='text__code'>
+      <div className='text__code--test'>
         <pre className='pre'>
           <code className='code'>
             {
               ` `}<span className='const'>const</span>
             {` cookieName = 'my-proposal'
- `}<span className='const'>const</span>
+  `}<span className='const'>const</span>
             {` token = getCookie(cookieName)
 
  if (!`}
-   <span className='function'>isEmpty</span>{`(token)){
+            <span className='function'>isEmpty</span>{`(token)){
 `}<span className='comment'>(//verify end decode token)</span>{`
     `}<span className='const'>let</span>
             {` `}<span className='varname'>decoded</span>
@@ -423,10 +453,8 @@ const AuthenticationText = () => {
           </code>
         </pre>
       </div>
-
-
       <h3>7).Make private route in React</h3>
-      <div className='text__code'>
+      <div className='text__code--test'>
         <pre className='pre'>
           <code className='code'>
             {
@@ -453,7 +481,7 @@ const AuthenticationText = () => {
   />
 );
 `}<span className='const'>const</span>{` `}
-<span className='varname'>mapStateToProps</span>{` = state => {
+            <span className='varname'>mapStateToProps</span>{` = state => {
   return {
     `}<span className='varname'>authenticate</span>
             {`:state.authenticate
