@@ -350,7 +350,6 @@ router.get('/resetPassword/:username', asyncHandler(async (req,res) => {
     const user = await getUserByUserName(username)
 
     if (user) {
-      await res.clearCookie('reset-password')
       await res.send(user)
     }
     if(user.noUser){
