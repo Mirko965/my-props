@@ -1,3 +1,184 @@
+1). store token in mongodb
+
+<pre>
+<code>
+
+const user= {
+  _id: ObjectId(),
+  username: "string"
+    }
+const payload = {
+  _id:user._id.toHexString(), 
+  username:user.username
+   } 
+const token = jwt.sign(payload,secret,{expiresIn: "1h"}).toString()
+const userWithToken = db.collection("users").findOneAndUpdate(
+    {_id:user._id},
+    {$set: {tokens:[{ token }]}},
+    {returnOriginal: false}
+  )
+
+</code>
+</pre>
+
+2). Use token from mongoDB and set token in http header (express)
+<pre>
+<code>
+
+router.post('/login',(req,res) => {
+const { email,password } = req.body
+ try {
+   const user = loginUser(password,email)
+   const token = user.tokens[0].token
+   res.header("Authorization",token).send(user)
+ } catch (err) {
+   return res.status(400).send(err)
+   }
+ })
+ 
+</pre>
+</code>
+
+3). Use token from header, after login and verify token
+<pre>
+<code>
+try {
+  const token = req.header("Authorization")
+  const decoded = jwt.verify(token,secret)
+  const _id= ObjectID(decoded._id)
+  return db.collection("users").findOne({_id})
+} catch (err) {
+  throw err
+}
+</pre>
+</code>
+
+
+4). Get token from server side
+
+<pre>
+<code>
+const loginUser = (user) => dispatch => {
+  axios.post("api/users/login",user)
+    .then(res => {
+      const token = res.data.tokens[0].token //use from mongoDB
+      setAuthToken(token)                    //set token in react
+      dispatch(setCurrentUser(token))})
+    .catch(err => dispatch({
+      type:'GET_ERRORS',
+      errors:err.response.data
+    }))
+}
+</pre>
+</code
+
+5). Set token in header from client side
+<pre>
+<code>
+const setAuthToken = token => {
+  if (token) {
+    axios.create({          
+      timeout: 60000,
+      httpAgent: new http.Agent({ keepAlive: true }), 
+      httpsAgent: new https.Agent({ keepAlive: true }),
+      maxRedirects: 10,
+      maxContentLength: 50 * 1000 * 1000
+  });
+    axios.defaults.headers.common['Authorization'] = token;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+};
+</pre>
+</code>
+
+6). Set and get and delete cookie
+<pre>
+<code>
+const setCookie = (name,value,days) => {
+  let expires = "";
+  if (days) {
+    let date = new Date();
+    date.setTime(date.getTime() + (days*24*60*60*1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
+
+const getCookie = (name) => {
+  const cookieArray = document.cookie.split(';')
+  const cookie = cookieArray
+    .filter((cookie) => name === cookie.substring(0,cookie.indexOf('='))
+      .trim())
+    .toString()
+  return cookie
+    .substring(cookie.indexOf('=')+1)
+}
+
+
+const eraseCookie = (name) => {
+  document.cookie = name + '=; Max-Age=-99999999;';
+}
+</pre>
+</code>
+
+
+7).What shall we do when refresh page ??
+<pre>
+<code>
+if (!isEmpty(token)){
+
+  let decoded  = jwt.decode(token);
+  setAuthToken(token);
+  store.dispatch(setCurrentUser(token));
+  store.dispatch(getCurrentUser(decoded.username));
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    store.dispatch(logoutUser());
+    window.location.href = '/';
+  }
+}
+</pre>
+</code>
+
+8).Make private route in React
+const PrivateRoute = ({ component: Component, authenticate, ...rest }) => (
+    <Route
+      {...rest}
+      render={props => authenticate.isAuthenticate === true ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/" />
+        )
+      }
+    />
+  );
+const mapStateToProps = state => {
+  return {
+    authenticate:state.authenticate
+  }
+};
+
+
+
+
+
+
+<pre>
+<code>
+try {
+ const token = req.header("Authorization")
+ const decoded = jwt.verify(token,secret)
+ const _id= ObjectID(decoded._id)
+ return db.collection("users").findOne({_id})
+  } catch (err) {
+    throw err
+  }
+</pre>
+</code>
+
+
 
 <h3>What is JSON Web Token</h3>
 <p>JSON Web Token is a JSON-based open standard for creating access tokens. Server could generate a token that has the claim logged in, and provide that to a client. The client could then use that token to prove that it is logged in . The tokens are signed by one party's private key (optional but recommended), so that both parties are able to verify that the token is legitimate.</p>

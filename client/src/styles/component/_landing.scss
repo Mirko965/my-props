@@ -25,9 +25,16 @@
 @media (max-width: 420px) {
   .landing__image {
     margin: 3rem auto 22rem;
-    padding: 2rem .5rem;
+    padding: 2rem 0 ;
     img {
       width: 350px;
+    }
+  }
+  .landing__header {
+    padding: 1rem;
+    h1 {
+      color: #e12b0b;
+      font-size: 24px;
     }
   }
 }

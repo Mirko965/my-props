@@ -9,14 +9,18 @@ import {
 import setAuthToken from '../utils/setAuthToken'
 import { clearErrors } from './errorsAction'
 import isEmpty from '../utils/isEmpty'
-import { getCookie } from '../utils/cookie'
+import { eraseCookie, getCookie } from '../utils/cookie'
 import jwt from 'jsonwebtoken'
+import store from '../../store'
+
+const urlClient = process.env.REACT_APP_CLIENT_URL
+const urlServer = process.env.REACT_APP_SERVER_URL
 
 //const cookieName = 'my-proposal'
 export const temporaryRegisterUser = (user) => dispatch => {
  
   dispatch(clearErrors())
-  axios.post('api/users/temporaryRegister',user)
+  axios.post(`${urlClient}/api/users/temporaryRegister`,user)
     .then((res) => {
       dispatch({
         type:'TEMPORARY_REGISTER_USER',
@@ -34,7 +38,7 @@ export const temporaryRegisterUser = (user) => dispatch => {
 export const tempPassword = (username,data,history) => dispatch => {
 
   dispatch(clearErrors())
-  axios.post(`api/users/tempPassword/${username}`,data)
+  axios.post(`${urlClient}/api/users/tempPassword/${username}`,data)
     .then(res => {
       dispatch({
         type:'TEMPORARY_PASSWORD',
@@ -52,7 +56,7 @@ export const tempPassword = (username,data,history) => dispatch => {
 
 export const registerUser = (username) => dispatch => {
 
-  axios.post(`api/users/register/${username}`)
+  axios.post(`${urlClient}/api/users/register/${username}`)
     .then((res) => {
       dispatch({
         type:'REGISTER_USER'
@@ -67,7 +71,8 @@ export const registerUser = (username) => dispatch => {
 }
 
 export const loginUser = (user,history) => dispatch => {
-  axios.post('api/users/login',user)
+
+  axios.post(`${urlClient}/api/users/login`,user)
     .then(res => {
       const token = res.data.tokens[0].token
       const username = res.data.username
@@ -96,7 +101,7 @@ export const loginUser = (user,history) => dispatch => {
 export const deleteUser = (username,history) => dispatch => {
 
   if (window.confirm('Are You shure?? This action can not be undone')){
-    axios.delete(`api/users/delete/${username}`)
+    axios.delete(`${urlClient}/api/users/delete/${username}`)
       .then(() => {
         dispatch({type:'REMOVE_USER'})
         history.push('/')
@@ -115,7 +120,7 @@ export const setCurrentUser = (token) => ({
 })
 export const getCurrentUser = (username) => dispatch => {
   dispatch(loadingUser())
-  axios.get(`api/users/username/${username}`)
+  axios.get(`${urlClient}/api/users/username/${username}`)
 
     .then(res => {
        dispatch({
@@ -135,7 +140,7 @@ export const getCurrentUser = (username) => dispatch => {
 
 export const logoutUser = () => dispatch => {
 
-  axios.post('api/users/logout')
+  axios.post(`${urlServer}/api/users/logout`)
     .then(() => {
       setAuthToken(false)
     }).then(() => {
@@ -157,7 +162,7 @@ export const mailForResetPassword = (email,history) => dispatch => {
       errors:{email:'Email field must provide'}
     })
   } else {
-    axios.get(`api/users/mailForResetPassword/${email}`)
+    axios.get(`${urlClient}/api/users/mailForResetPassword/${email}`)
       .then(((res) => {
         const username = res.data.username
         dispatch({
@@ -203,7 +208,7 @@ export const resPassword = (newPassword,newPassword2,history) => dispatch => {
 
     axios({
       method: 'post',
-      url: `api/users/resetPassword/${username}`,
+      url: `${urlClient}/api/users/resetPassword/${username}`,
       data: {
         newPassword,
         newPassword2
@@ -230,7 +235,7 @@ export const resPassword = (newPassword,newPassword2,history) => dispatch => {
 export const getUserForResetPassword = (username) => dispatch => {
   dispatch(loadingUser())
 
-  axios.get(`api/users/resetPassword/${username}`)
+  axios.get(`${urlClient}/api/users/resetPassword/${username}`)
 
     .then(res => {
       //eraseCookie('reset-password')
@@ -258,3 +263,5 @@ export const removeUser = () => {
     type: 'REMOVE_USER'
   }
 }
+
+

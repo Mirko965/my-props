@@ -23,19 +23,19 @@ const {authenticate} = require('../../middleware/authenticate')
 const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
 const url = process.env.URL
-//const urlClient = process.env.URL_CLIENT
+const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
 const authPass = process.env.EMAIL_PASS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
-  res.cookie('testCookie','foo')
+
   res.json({Msg: 'text from test'})
 }))
 
 router.post('/temporaryRegister', asyncHandler(async (req,res) => {
   const {errors, isValid} = await validateRegisterInput(req.body)
-  const {email, name, password,password2, username} = req.body
+  const {email, name, password, username} = req.body
 
   if (!isValid){
     return res.status(400).json(errors);
@@ -106,7 +106,7 @@ router.get('/register/:token', asyncHandler(async (req,res) => {
     const decode = jwt.decode(token)
     const username = decode.username
     await insertUser(username)
-    return res.redirect(`${url}/verifyRegistration`)
+    return res.redirect(`${urlClient}/verifyRegistration`)
   } catch (err) {
     return res.status(400).json(errors)
   }
@@ -263,7 +263,7 @@ router.get('/changePassword/:username',authenticate, asyncHandler(async (req,res
     const decode = jwt.decode(token,secret)
     const username = decode.username
     await changePassword(username)
-    res.redirect(`${url}/verifyPassword`)
+    res.redirect(`${urlClient }/verifyPassword`)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -295,7 +295,7 @@ router.get('/mailForResetPassword/:email', asyncHandler(async (req,res) => {
         subject: 'Sending Email using Node.js',
         html: `<h2>Welcome to MERN</h2>\n\n`+
           `<p>Click on the link below to reset your password</p>\n\n`+
-          `<link>${url}/resetPassword/${token}</link>`
+          `<link>${urlClient}/resetPassword/${token}</link>`
       }
       transporter.sendMail(mailOptions, async (error, info) => {
         if (error) {

@@ -57,3 +57,26 @@
   height: 30px;
   width: 30px;
 }
+
+@media screen and (max-width: 421px) {
+  .menu {
+    flex-direction: column;
+    padding: 0;
+  }
+  .menu__authLink {
+    font-size: 18px;
+    justify-content: space-around;
+  }
+  .menu__developers {
+    justify-content: space-around;
+    a {
+      font-size: 18px;
+      padding: 2rem 0;
+    }
+    .menu__img {
+      border: 1px solid white;
+      border-radius: 20px;
+    }
+  }
+
+}

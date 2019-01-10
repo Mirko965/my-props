@@ -1,0 +1,22 @@
+
+
+.language-javascript {
+  background-color: #a2cad7;
+  max-width: 30rem;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+pre {
+  margin: 0 auto;
+  width: 65rem;
+  overflow-x: auto;
+  //padding: 1rem;
+}
+
+@media (max-width: 421px) {
+  pre {
+    margin: 0 auto;
+    width: 28rem;
+  }
+}
