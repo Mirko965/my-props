@@ -4,10 +4,13 @@ const path = require('path')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const exphbs   = require('express-handlebars');
 const users = require('./routes/api/authentication')
 
-
 const app = express()
+
+app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.set('view engine', 'handlebars');
 
 app.use(cors())
 app.use(express.static(__dirname + '/public'))

@@ -7,7 +7,8 @@ const initialState = {
   password:'',
   email:'',
   loading:false,
-  message:''
+  message:'',
+  name:''
 }
 
 export const authenticationReducer = (state = initialState ,action) => {
@@ -55,7 +56,12 @@ export const authenticationReducer = (state = initialState ,action) => {
         ...state,
         isAuthenticate:false,
         avatar:'',
-        username:''
+        username:'',
+        password:'',
+        email:'',
+        loading:false,
+        message:'',
+        name:''
       }
     case 'REMOVE_USER':
       return {

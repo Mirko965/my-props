@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const asyncHandler = require('express-async-handler')
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
@@ -11,6 +12,8 @@ const validateLoginInput = require('../../validation/login')
 const validateChangePassword = require('../../validation/changePassword')
 const validateForgotPassword = require('../../validation/forgotPassword')
 const mailForForgotPassword = require('../../validation/mailForForgotPassword')
+const {sendEmail} = require('../../email/sendEmail')
+const {resetPasswordMail} = require('../../email/mailMessage')
 const {resetPassword} = require('../../mongoDB/authentication/resetPassword')
 const {getUserByEmail} = require('../../mongoDB/authentication/getUserByEmail')
 const {tempPassword,changePassword} = require('../../mongoDB/authentication/changePassword')
@@ -22,6 +25,8 @@ const {logoutUser} = require('../../mongoDB/authentication/logoutUser')
 const {authenticate} = require('../../middleware/authenticate')
 const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
+
+
 const url = process.env.URL
 const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
@@ -29,8 +34,28 @@ const authPass = process.env.EMAIL_PASS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
+  const errors = {}
 
-  res.json({Msg: 'text from test'})
+  try {
+    const context = {
+      name: 'Mirko',
+      message:authEmail
+    }
+    const mail = await sendEmail('test','test', context)
+    const message = 'Email sent: ' + mail.response
+    res.status(400).send(message)
+
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      errors.mail = 'Path to email is wrong'
+      return res.status(400).send(errors)
+    }
+    if (err.code === 'EAUTH') {
+      errors.mail = 'Username and Password for email, not accepted!'
+      return res.status(401).send(errors)
+    }
+
+  }
 }))
 
 router.post('/temporaryRegister', asyncHandler(async (req,res) => {
@@ -52,37 +77,26 @@ router.post('/temporaryRegister', asyncHandler(async (req,res) => {
       errors.email = 'email already exist'
       return res.status(400).send(errors)
     }
-
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      tls: {
-        rejectUnauthorized: false
-      },
-      auth: {
-        user: authEmail,
-        pass: authPass
-      }
-    })
-    let mailOptions = {
-      from: authEmail,
-      to: email,
-      subject: 'Sending Email using Node.js',
-      html: `<h2>Welcome to MERN</h2>\n\n`+
-        `<p>Click on the link below to verify your email address</p>\n\n`+
-        `<link>${url}/api/users/register/${token}</link>`
+    const template = 'temporaryRegister'
+    const subject = 'Register User'
+    const context = {
+      url: url,
+      token:token
     }
-
-    transporter.sendMail(mailOptions, async (error, info) => {
-      if (error) {
-        res.status(400).send(error);
-      } else {
-        const message = 'Email sent: ' + info.response
-        return res.send({message})
-      }
-    });
-    transporter.close()
+    const emailSend =  await sendEmail(template,subject,context)
+    const message = 'Email sent: ' + emailSend.response
+    console.log({message})
+    return res.status(200).send({message})
 
   } catch (err) {
+    if (err.code === 'ENOENT') {
+      errors.email = 'Path to email is wrong'
+      return res.status(400).send(errors)
+    }
+    if (err.code === 'EAUTH') {
+      errors.email = 'Username and Password for email, not accepted!'
+      return res.status(401).send(errors)
+    }
     if (err.code === 11000) {
       if (err.errmsg.includes(email)) {
         errors.email = 'email already exist'
@@ -152,11 +166,7 @@ router.post('/logout',authenticate, asyncHandler(async (req,res) => {
   try {
     const username = req.user.username
     const logout = await logoutUser(username)
-    let options = {
-      maxAge: -(1000 * 60 * 60 * 24)
-    }
-    await res.cookie('my-proposal','',options)
-    return res.send(logout)
+    await res.send(logout)
   } catch (e) {
     return res.status(400).json(e)
   }
@@ -216,42 +226,33 @@ router.post('/tempPassword/:username',authenticate, asyncHandler(async (req,res)
       const payload = {username:user}
       const token = jwt.sign(payload,secret,{expiresIn: 60 * 15})
       const change = await tempPassword(username, newPassword, oldPassword)
+
       if (change.error){
         errors.oldPassword = change.error
         return res.status(400).send(errors)
       }
 
-      let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        tls: {
-          rejectUnauthorized: false
-        },
-        auth: {
-          user: authEmail,
-          pass: authPass
-        }
-      })
-      let mailOptions = {
-        from: authEmail,
-        to: email,
-        subject: 'Sending Email using Node.js',
-        html: `<h2>Welcome to MERN</h2>\n\n`+
-          `<p>Click on the link below to change your password</p>\n\n`+
-          `<link>${url}/api/users/changePassword/${token}</link>`
+      const template = 'changePassword'
+      const subject = 'Change Password'
+      const context = {
+        url,
+        token
       }
-      transporter.sendMail(mailOptions, async (error, info) => {
-        if (error) {
-          errors.oldPassword = 'User not found'
-          return res.status(400).send(errors)
-        } else {
-          const message = 'Email sent: ' + info.response
-          return res.send({...change,message})
-        }
-      });
-      transporter.close()
+
+      const emailSend = await sendEmail(template,subject,context)
+      const message = 'Email sent: ' + emailSend.response
+      return res.status(200).send({...change,message})
 
     }
-  } catch (e) {
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      errors.email = 'Path to email is wrong'
+      return res.status(400).send(errors)
+    }
+    if (err.code === 'EAUTH') {
+      errors.email = 'Username and Password for email, not accepted!'
+      return res.status(401).send(errors)
+    }
     return res.status(401).send({errors: 'You are not authorized'})
   }
 }))
@@ -270,6 +271,7 @@ router.get('/changePassword/:username',authenticate, asyncHandler(async (req,res
 }))
 
 router.get('/mailForResetPassword/:email', asyncHandler(async (req,res) => {
+  const errors = {}
 
   try {
     const email = req.params.email
@@ -279,44 +281,32 @@ router.get('/mailForResetPassword/:email', asyncHandler(async (req,res) => {
     if (user){
       const payload = {username:user.username}
       const token = await jwt.sign(payload,secret,{ expiresIn: 60 * 15 }).toString()
-      let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        tls: {
-          rejectUnauthorized: false
-        },
-        auth: {
-          user: authEmail,
-          pass: authPass
-        }
-      })
-      let mailOptions = {
-        from: authEmail,
-        to: email,
-        subject: 'Sending Email using Node.js',
-        html: `<h2>Welcome to MERN</h2>\n\n`+
-          `<p>Click on the link below to reset your password</p>\n\n`+
-          `<link>${urlClient}/resetPassword/${token}</link>`
+
+      const subject = 'Reset Password'
+      const template = 'resetPassword'
+      const context = {
+        urlClient,
+        token
       }
-      transporter.sendMail(mailOptions, async (error, info) => {
-        if (error) {
-          errors.oldPassword = 'User not found'
-          return res.status(400).send(errors)
-        } else {
-          const message = 'Email sent: ' + info.response
+      let options = {
+        maxAge: 1000 * 60 * 15
+      }
+      const emailSend = await sendEmail(template,subject,context)
+      const message = 'Email sent: ' + emailSend.response
+      await res.cookie('reset-password',token,options)
+      await res.header('Authorization', token).send({...user,message})
 
-
-          let options = {
-            maxAge: 1000 * 60 * 15
-          }
-
-          await res.cookie('reset-password',token,options)
-          await res.header('Authorization', token).send({...user,message})
-        }
-      });
-      transporter.close()
     }
-  } catch (e) {
-    res.status(400).send(e)
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      errors.email = 'Path to email is wrong'
+      return res.status(400).send(errors)
+    }
+    if (err.code === 'EAUTH') {
+      errors.email = 'Username and Password for email, not accepted!'
+      return res.status(401).send(errors)
+    }
+    res.status(400).send(err)
   }
 }))
 

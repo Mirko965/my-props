@@ -68,7 +68,7 @@ class PrivatePage extends Component {
 
     let content
 
-    if (authenticate.name === undefined || authenticate.avatar === undefined) {
+    if (authenticate.username === '') {
       content = <Spinner/>
     } else {
       if (authenticate.isAuthenticate === true && this.props.match.params.username === authenticate.username) {

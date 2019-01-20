@@ -3,7 +3,6 @@ import Modal from 'react-modal'
 
 
 const VerifyForgotPassword = (props) => {
-
   return (
     <Modal
       overlayClassName='login__modal--overlay'

@@ -1,31 +1,47 @@
 const nodemailer = require('nodemailer');
+const hbs = require('nodemailer-express-handlebars');
 
-const sendEmail = (user,pass,from,to) => {
-  let transporter = nodemailer.createTransport({
+const url = process.env.URL
+const urlClient = process.env.URL_CLIENT
+const authEmail = process.env.EMAIL_ADDRESS
+const authPass = process.env.EMAIL_PASS
+const secret = process.env.JWT_SECRET
+
+const sendEmail = async (template, subject, context = {}) => {
+
+  let transporter = await nodemailer.createTransport({
     service: 'gmail',
     tls: {
       rejectUnauthorized: false
     },
     auth: {
-      user,
-      pass
+      user: authEmail,
+      pass: authPass
     }
   })
-  let mailOptions = {
-    from,
-    to,
-    subject: 'Sending Email using Node.js',
-    html: `<h2>Welcome to MERN</h2>\n\n`+
-      `<p>Click on the link below to verify your email address</p>\n\n`+
-      `<link>${url}/api/users/register/${username}</link>`
+  const options = {
+    viewEngine: 'handlebars',
+    viewPath: 'D:\\my_proposal\\views\\'
   }
-  transporter.sendMail(mailOptions, async (error, info) => {
-    if (error) {
-      res.status(400).send(error);
-    } else {
-      const message = 'Email sent: ' + info.response
-      return res.send({message})
-    }
-  });
-  transporter.close()
+  var mail = {
+    from: authEmail,
+    to: authEmail,
+    subject,
+    template,
+    context
+  }
+  await transporter.use('compile', hbs(options))
+  try {
+    const sendmail = await transporter.sendMail(mail);
+    return sendmail
+  } catch (e) {
+    throw e
+  } finally {
+    await transporter.close()
+
+  }
+
 }
+
+
+module.exports = {sendEmail}
