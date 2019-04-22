@@ -10,9 +10,14 @@ const secret = process.env.JWT_SECRET
 
 //const privateKEY = fs.readFileSync('../../ssl/private_key','utf8');
 
-
 const loginUser = async (email, password) => {
-  const client = await MongoClient.connect(url,{useNewUrlParser: true})
+  const client = await MongoClient.connect(url,
+    {
+      useNewUrlParser: true,
+      w:1,
+      poolSize:100,
+      reconnectTries:100
+    })
   const db = client.db(dbName)
 
   try {
@@ -43,15 +48,4 @@ const loginUser = async (email, password) => {
   }
 }
 module.exports = {loginUser};
-
-// (async () => {
-//   const email = 'tijanajelic.jelic@gmail.com'
-//   const pass = 'pass'
-//   try {
-//     const user = await loginUser(email,pass)
-//     console.log(user)
-//   } catch (e) {
-//     console.log(e)
-//   }
-// })()
 

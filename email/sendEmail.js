@@ -20,8 +20,13 @@ const sendEmail = async (template, subject, context = {}) => {
     }
   })
   const options = {
-    viewEngine: 'handlebars',
-    viewPath: 'D:\\my_proposal\\views\\'
+    viewEngine: {
+      extName: '.handlebars',
+      partialsDir: 'D:\\my_proposal\\views\\',
+      layoutsDir: 'D:\\my_proposal\\views\\'
+    },
+    viewPath: 'D:\\my_proposal\\views\\',
+    extName: '.handlebars'
   }
   var mail = {
     from: authEmail,

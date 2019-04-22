@@ -132,6 +132,7 @@ router.post('/login', asyncHandler(async (req,res) => {
   const {errors, isValid} = await validateLoginInput(req.body)
   const {email,password} = req.body
   if (!isValid){
+    console.log(errors)
     return res.status(400).json(errors);
   }
   try {
