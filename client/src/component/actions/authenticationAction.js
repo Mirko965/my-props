@@ -9,13 +9,13 @@ import {
 import setAuthToken from '../utils/setAuthToken'
 import { clearErrors } from './errorsAction'
 import isEmpty from '../utils/isEmpty'
-import { getCookie } from '../utils/cookie'
+import { getCookie,setCookie } from '../utils/cookie'
 import jwt from 'jsonwebtoken'
 
 const urlClient = process.env.REACT_APP_CLIENT_URL
 const urlServer = process.env.REACT_APP_SERVER_URL
 
-//const cookieName = 'my-proposal'
+const cookieName = 'my-proposal'
 export const temporaryRegisterUser = (user) => dispatch => {
 
   dispatch(clearErrors())
@@ -82,6 +82,7 @@ export const loginUser = (user,history) => dispatch => {
       const email = res.data.email
 
       setAuthToken(token)
+      setCookie(cookieName)
       dispatch(modalLoginClose())
       dispatch(setCurrentUser(token))
       dispatch({
@@ -121,7 +122,6 @@ export const setCurrentUser = (token) => ({
 })
 export const getCurrentUser = (username) => dispatch => {
   dispatch(loadingUser())
-  //axios.get(`api/users/username/${username}`)
   axios.get(`${urlClient}/api/users/username/${username}`)
 
     .then(res => {

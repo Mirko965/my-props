@@ -85,7 +85,6 @@ router.post('/temporaryRegister', asyncHandler(async (req,res) => {
     }
     const emailSend =  await sendEmail(template,subject,context)
     const message = 'Email sent: ' + emailSend.response
-    console.log({message})
     return res.status(200).send({message})
 
   } catch (err) {
@@ -132,7 +131,6 @@ router.post('/login', asyncHandler(async (req,res) => {
   const {errors, isValid} = await validateLoginInput(req.body)
   const {email,password} = req.body
   if (!isValid){
-    console.log(errors)
     return res.status(400).json(errors);
   }
   try {
