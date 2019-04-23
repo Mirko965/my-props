@@ -17,11 +17,8 @@ const cookieName = 'my-proposal'
 const token = getCookie(cookieName)
 const resetPassToken = getCookie('reset-password')
 
-
     if (!isEmpty(token)){
-
       let decoded  = jwt.decode(token);
-
       setAuthToken(token);
       store.dispatch(setCurrentUser(token));
       store.dispatch(getCurrentUser(decoded.username));
@@ -51,4 +48,3 @@ class App extends Component {
 }
 
 export default App
-

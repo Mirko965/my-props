@@ -9,7 +9,7 @@ import {
 import setAuthToken from '../utils/setAuthToken'
 import { clearErrors } from './errorsAction'
 import isEmpty from '../utils/isEmpty'
-import { getCookie,setCookie } from '../utils/cookie'
+import { getCookie,eraseCookie } from '../utils/cookie'
 import jwt from 'jsonwebtoken'
 
 const urlClient = process.env.REACT_APP_CLIENT_URL
@@ -82,7 +82,6 @@ export const loginUser = (user,history) => dispatch => {
       const email = res.data.email
 
       setAuthToken(token)
-      setCookie(cookieName)
       dispatch(modalLoginClose())
       dispatch(setCurrentUser(token))
       dispatch({
@@ -144,6 +143,7 @@ export const logoutUser = () => dispatch => {
   axios.post(`${urlServer}/api/users/logout`)
     .then(() => {
       setAuthToken(false)
+      eraseCookie(cookieName)
     }).then(() => {
     dispatch({
       type:'LOGOUT_USER'
