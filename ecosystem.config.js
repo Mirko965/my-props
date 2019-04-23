@@ -14,7 +14,7 @@ module.exports = {
       key: '~/.ssh/mirkoKey.pem',
       ref: 'origin/aws',
       repo: 'git@github.com:Mirko965/my-props.git',
-      path: '/home/ec2-user/my_proposal_aws',
+      path: '/home/ec2-user/my-props',
       'post-deploy': 'npm install && cd ./client && npm install && npm run build && cd ../ && pm2 startOrRestart ecosystem.config.js'
     }
   }
