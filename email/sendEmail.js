@@ -1,34 +1,27 @@
 const nodemailer = require('nodemailer');
+const aws = require('aws-sdk');
 const hbs = require('nodemailer-express-handlebars');
 
-const url = process.env.URL
-const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
-const authPass = process.env.EMAIL_PASS
-const secret = process.env.JWT_SECRET
 
 const sendEmail = async (template, subject, context = {}) => {
+  aws.config.loadFromPath('/home/ec2-user/.AWS/config.json');
 
   let transporter = await nodemailer.createTransport({
-    service: 'gmail',
-    tls: {
-      rejectUnauthorized: false
-    },
-    auth: {
-      user: authEmail,
-      pass: authPass
-    }
-  })
+    SES: new aws.SES({
+      apiVersion: '2010-12-01'
+    })
+  });
   const options = {
     viewEngine: {
       extName: '.handlebars',
-      partialsDir: 'D:\\my_proposal\\views\\',
-      layoutsDir: 'D:\\my_proposal\\views\\'
+      partialsDir: 'views/',
+      layoutsDir: 'views/'
     },
-    viewPath: 'D:\\my_proposal\\views\\',
+    viewPath: 'views/',
     extName: '.handlebars'
   }
-  var mail = {
+  const mail = {
     from: authEmail,
     to: authEmail,
     subject,
@@ -36,17 +29,15 @@ const sendEmail = async (template, subject, context = {}) => {
     context
   }
   await transporter.use('compile', hbs(options))
+
   try {
-    const sendmail = await transporter.sendMail(mail);
-    return sendmail
+    return await transporter.sendMail(mail)
   } catch (e) {
     throw e
   } finally {
     await transporter.close()
-
   }
-
 }
 
-
 module.exports = {sendEmail}
+

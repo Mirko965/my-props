@@ -4,12 +4,10 @@
   "description": "My proposal for web-app",
   "main": "index.js",
   "scripts": {
-    "client-install": "npm install --prefix client",
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+    "restart": "pm2 startOrRestart ecosystem.config.js",
+    "deploy": "pm2 deploy ecosystem.config.js production"
   },
   "repository": {
     "type": "git",
@@ -22,6 +20,7 @@
   },
   "homepage": "https://github.com/Mirko965/my-props#readme",
   "dependencies": {
+    "aws-sdk": "^2.441.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",

@@ -2,18 +2,12 @@ require('../../config/environment.js')
 const express = require('express')
 const router = express.Router()
 const asyncHandler = require('express-async-handler')
-const nodemailer = require('nodemailer');
-const hbs = require('nodemailer-express-handlebars');
-const fs = require('fs')
 const jwt = require('jsonwebtoken')
-const cookieParser = require('cookie-parser')
 const validateRegisterInput = require('../../validation/register')
 const validateLoginInput = require('../../validation/login')
 const validateChangePassword = require('../../validation/changePassword')
 const validateForgotPassword = require('../../validation/forgotPassword')
-const mailForForgotPassword = require('../../validation/mailForForgotPassword')
 const {sendEmail} = require('../../email/sendEmail')
-const {resetPasswordMail} = require('../../email/mailMessage')
 const {resetPassword} = require('../../mongoDB/authentication/resetPassword')
 const {getUserByEmail} = require('../../mongoDB/authentication/getUserByEmail')
 const {tempPassword,changePassword} = require('../../mongoDB/authentication/changePassword')
@@ -30,7 +24,6 @@ const {insertUser} = require('../../mongoDB/authentication/insertUser')
 const url = process.env.URL
 const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
-const authPass = process.env.EMAIL_PASS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
