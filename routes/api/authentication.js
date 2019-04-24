@@ -28,24 +28,24 @@ const authEmail = process.env.EMAIL_ADDRESS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
-  var transport = nodemailer.createTransport("SMTP", { // Yes. SMTP!
-    host: "email-smtp.us-east-1.amazonaws.com", // Amazon email SMTP hostname
-    secureConnection: true, // use SSL
-    port: 465, // port for secure SMTP
+  var transport = nodemailer.createTransport( {
+    host: "email-smtp.us-east-1.amazonaws.com",
+    secure: true,
+    port: 465,
     auth: {
-      user: process.env.AWS_SMTP_USERNAME, // Use from Amazon Credentials
-      pass:  process.env.AWS_SMTP_PASSWORD // Use from Amazon Credentials
+      user: process.env.AWS_SMTP_USERNAME,
+      pass:  process.env.AWS_SMTP_PASSWORD
     }
   });
 
   var mailOptions = {
-    from: authEmail, // sender address
-    to: authEmail, // list of receivers
-    subject: "User registerd", // Subject line
-    html: "<b>New user registered!</b>" // email body
+    from: authEmail,
+    to: authEmail,
+    subject: "User registerd",
+    html: "<b>New user registered!</b>"
   };
 
-  // send mail with defined transport object
+
   transport.sendMail(mailOptions, function(error, response){
     if(error){
       console.log(error);
