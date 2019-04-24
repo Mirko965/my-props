@@ -20,35 +20,66 @@ const {authenticate} = require('../../middleware/authenticate')
 const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
 
-
+const nodemailer = require('nodemailer')
+const AWS = require('aws-sdk');
 const url = process.env.URL
 const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
-  const errors = {}
+// Load the AWS SDK for Node.js
 
-  try {
-    const context = {
-      name: 'Mirko',
-      message:authEmail
-    }
-    const mail = await sendEmail('test','test', context)
-    const message = 'Email sent: ' + mail.response
-    res.status(400).send(message)
+// Set the region
+  AWS.config.loadFromPath('/home/ec2-user/.AWS/config.json');
 
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      errors.mail = 'Path to email is wrong'
-      return res.status(400).send(errors)
-    }
-    if (err.code === 'EAUTH') {
-      errors.mail = 'Username and Password for email, not accepted!'
-      return res.status(401).send(errors)
-    }
+// Create sendEmail params
+  const params = {
+    Destination: { /* required */
+      CcAddresses: [
+        authEmail,
+        /* more items */
+      ],
+      ToAddresses: [
+        authEmail,
+        /* more items */
+      ]
+    },
+    Message: { /* required */
+      Body: { /* required */
+        Html: {
+          Charset: "UTF-8",
+          Data: "HTML_FORMAT_BODY"
+        },
+        Text: {
+          Charset: "UTF-8",
+          Data: "TEXT_FORMAT_BODY"
+        }
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: 'Test email'
+      }
+    },
+    Source: authEmail, /* required */
+    ReplyToAddresses: [
+      authEmail,
+      /* more items */
+    ],
+  };
 
-  }
+// Create the promise and SES service object
+  const sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
+
+// Handle promise's fulfilled/rejected states
+  sendPromise.then(
+    function(data) {
+      console.log(data.MessageId);
+    }).catch(
+    function(err) {
+      console.error(err, err.stack);
+    });
+
 }))
 
 router.post('/temporaryRegister', asyncHandler(async (req,res) => {
