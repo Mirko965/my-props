@@ -21,42 +21,65 @@ const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
 
 const nodemailer = require('nodemailer')
-
+const AWS = require('aws-sdk');
 const url = process.env.URL
 const urlClient = process.env.URL_CLIENT
 const authEmail = process.env.EMAIL_ADDRESS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
-  var transport = nodemailer.createTransport( {
-    host: "email-smtp.us-east-1.amazonaws.com",
-    secure: true,
-    port: 465,
-    auth: {
-      user: process.env.AWS_SMTP_USERNAME,
-      pass:  process.env.AWS_SMTP_PASSWORD
-    }
-  });
+// Load the AWS SDK for Node.js
 
-  var mailOptions = {
-    from: authEmail,
-    to: authEmail,
-    subject: "User registerd",
-    html: "<b>New user registered!</b>"
+// Set the region
+  AWS.config.loadFromPath('/home/ec2-user/.AWS/config.json');
+
+// Create sendEmail params
+  const params = {
+    Destination: { /* required */
+      CcAddresses: [
+        authEmail,
+        /* more items */
+      ],
+      ToAddresses: [
+        authEmail,
+        /* more items */
+      ]
+    },
+    Message: { /* required */
+      Body: { /* required */
+        Html: {
+          Charset: "UTF-8",
+          Data: "HTML_FORMAT_BODY"
+        },
+        Text: {
+          Charset: "UTF-8",
+          Data: "TEXT_FORMAT_BODY"
+        }
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: 'Test email'
+      }
+    },
+    Source: authEmail, /* required */
+    ReplyToAddresses: [
+      authEmail,
+      /* more items */
+    ],
   };
 
+// Create the promise and SES service object
+  const sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(params).promise();
 
-  transport.sendMail(mailOptions, function(error, response){
-    if(error){
-      console.log(error);
-    }else{
-      console.log("Message sent: " + response.message);
-    }
+// Handle promise's fulfilled/rejected states
+  sendPromise.then(
+    function(data) {
+      console.log(data.MessageId);
+    }).catch(
+    function(err) {
+      console.error(err, err.stack);
+    });
 
-    transport.close(); // shut down the connection pool, no more messages
-  });
-
-  res.send('OK');
 }))
 
 router.post('/temporaryRegister', asyncHandler(async (req,res) => {
