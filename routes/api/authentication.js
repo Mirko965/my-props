@@ -20,6 +20,7 @@ const {authenticate} = require('../../middleware/authenticate')
 const {loginUser} = require('../../mongoDB/authentication/loginUser')
 const {insertUser} = require('../../mongoDB/authentication/insertUser')
 
+const nodemailer = require('nodemailer')
 
 const url = process.env.URL
 const urlClient = process.env.URL_CLIENT
@@ -27,28 +28,35 @@ const authEmail = process.env.EMAIL_ADDRESS
 const secret = process.env.JWT_SECRET
 
 router.get('/test', asyncHandler(async (req,res) => {
-  const errors = {}
-
-  try {
-    const context = {
-      name: 'Mirko',
-      message:authEmail
+  var transport = nodemailer.createTransport("SMTP", { // Yes. SMTP!
+    host: "email-smtp.us-east-1.amazonaws.com", // Amazon email SMTP hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    auth: {
+      user: process.env.AWS_SMTP_USERNAME, // Use from Amazon Credentials
+      pass:  process.env.AWS_SMTP_PASSWORD // Use from Amazon Credentials
     }
-    const mail = await sendEmail('test','test', context)
-    const message = 'Email sent: ' + mail.response
-    res.status(400).send(message)
+  });
 
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      errors.mail = 'Path to email is wrong'
-      return res.status(400).send(errors)
-    }
-    if (err.code === 'EAUTH') {
-      errors.mail = 'Username and Password for email, not accepted!'
-      return res.status(401).send(errors)
+  var mailOptions = {
+    from: authEmail, // sender address
+    to: authEmail, // list of receivers
+    subject: "User registerd", // Subject line
+    html: "<b>New user registered!</b>" // email body
+  };
+
+  // send mail with defined transport object
+  transport.sendMail(mailOptions, function(error, response){
+    if(error){
+      console.log(error);
+    }else{
+      console.log("Message sent: " + response.message);
     }
 
-  }
+    transport.close(); // shut down the connection pool, no more messages
+  });
+
+  res.send('OK');
 }))
 
 router.post('/temporaryRegister', asyncHandler(async (req,res) => {
