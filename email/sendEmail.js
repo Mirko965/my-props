@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
-const aws = require('aws-sdk');
+//const aws = require('aws-sdk');
 const hbs = require('nodemailer-express-handlebars');
 
 const authEmail = process.env.EMAIL_ADDRESS
 
 const sendEmail = async (template, subject, context = {}) => {
-  aws.config.loadFromPath('/home/ec2-user/.AWS/config.json');
+  //aws.config.loadFromPath('/home/ec2-user/.AWS/config.json');
 
   /*let transporter = await nodemailer.createTransport({
     SES: new aws.SES({
@@ -21,6 +21,7 @@ const sendEmail = async (template, subject, context = {}) => {
       pass: process.env.AWS_SMTP_PASSWORD
     }
   });
+  console.log(transporter)
   const options = {
     viewEngine: {
       extName: '.handlebars',
@@ -42,6 +43,7 @@ const sendEmail = async (template, subject, context = {}) => {
   try {
     return await transporter.sendMail(mail)
   } catch (e) {
+    console.log(e)
     throw e
   } finally {
     await transporter.close()
