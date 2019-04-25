@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
+const d = require('../views/temporaryRegister.handlebars')
 
 const url = process.env.URL
 const urlClient = process.env.URL_CLIENT
@@ -22,10 +23,10 @@ const sendEmail = async (template, subject, context = {}) => {
   const options = {
     viewEngine: {
       extName: '.handlebars',
-      partialsDir: 'D:\\my_proposal\\views\\',
-      layoutsDir: 'D:\\my_proposal\\views\\'
+      partialsDir: 'views',
+      layoutsDir: 'views'
     },
-    viewPath: 'D:\\my_proposal\\views\\',
+    viewPath: 'views',
     extName: '.handlebars'
   }
   var mail = {
