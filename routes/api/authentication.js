@@ -82,6 +82,7 @@ router.post('/temporaryRegister', asyncHandler(async (req,res) => {
     return res.status(200).send({message})
 
   } catch (err) {
+    console.log(err)
     if (err.code === 'ENOENT') {
       errors.email = 'Path to email is wrong'
       return res.status(400).send(errors)
