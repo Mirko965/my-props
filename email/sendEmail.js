@@ -33,6 +33,7 @@ const sendEmail = async (template, subject, context = {}) => {
   try {
     return await transporter.sendMail(mail)
   } catch (e) {
+    console.log(e)
     throw e
   } finally {
     await transporter.close()
