@@ -5,7 +5,7 @@ const hbs = require('nodemailer-express-handlebars');
 const authEmail = process.env.EMAIL_ADDRESS
 
 const sendEmail = async (template, subject, context = {}) => {
-  aws.config.loadFromPath('/home/ec2-user/.AWS/config.json');
+  aws.config.loadFromPath('/home/centos/.AWS/config.json');
 
   let transporter = await nodemailer.createTransport({
     SES: new aws.SES({
