@@ -63,7 +63,7 @@ export const authenticationReducer = (state = initialState ,action) => {
         message:'',
         name:''
       }
-    case 'REMOVE_USER':
+    case 'DELETE_USER':
       return {
         isAuthenticate:false,
         avatar:'',
