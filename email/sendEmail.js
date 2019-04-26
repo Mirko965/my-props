@@ -13,7 +13,7 @@ const sendEmail = async (template, subject, context = {}) => {
   let transporter = await nodemailer.createTransport({
     host: 'smtp.googlemail.com',
     port: 587,
-    secure: true,
+    secure: false,
     auth: {
       user: authEmail,
       pass: authPass
