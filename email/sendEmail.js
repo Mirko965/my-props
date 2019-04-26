@@ -17,6 +17,10 @@ const sendEmail = async (template, subject, context = {}) => {
     auth: {
       user: authEmail,
       pass: authPass
+    },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false
     }
   })
   const options = {
