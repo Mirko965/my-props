@@ -11,10 +11,9 @@ const secret = process.env.JWT_SECRET
 const sendEmail = async (template, subject, context = {}) => {
 
   let transporter = await nodemailer.createTransport({
-    service: 'gmail',
-    tls: {
-      rejectUnauthorized: false
-    },
+    host: 'smtp.googlemail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: authEmail,
       pass: authPass
