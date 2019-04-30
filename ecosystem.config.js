@@ -10,8 +10,8 @@ module.exports = {
   deploy: {
     production: {
       user: 'centos',
-      host: 'ec2-34-195-199-8.compute-1.amazonaws.com',
-      key: '~/.ssh/centos7.pem',
+      host: 'ec2-35-169-116-84.compute-1.amazonaws.com',
+      key: '~/.ssh/centos7Key.pem',
       ref: 'origin/aws',
       repo: 'https://github.com/Mirko965/my-props.git',
       path: '/home/centos/my-props',
