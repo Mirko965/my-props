@@ -35,7 +35,7 @@ router.get('/test', asyncHandler(async (req,res) => {
       name: 'Mirko',
       message:authEmail
     }
-    const mail = await sendEmail('test','test', context)
+    const mail = await sendEmail(authEmail,'test','test', context)
     const message = 'Email sent: ' + mail.response
     res.status(400).send(message)
 
@@ -77,7 +77,7 @@ router.post('/temporaryRegister', asyncHandler(async (req,res) => {
       url: url,
       token:token
     }
-    const emailSend =  await sendEmail(template,subject,context)
+    const emailSend =  await sendEmail(email,template,subject,context)
     const message = 'Email sent: ' + emailSend.response
     return res.status(200).send({message})
 
@@ -233,7 +233,7 @@ router.post('/tempPassword/:username',authenticate, asyncHandler(async (req,res)
         token
       }
 
-      const emailSend = await sendEmail(template,subject,context)
+      const emailSend = await sendEmail(email,template,subject,context)
       const message = 'Email sent: ' + emailSend.response
       return res.status(200).send({...change,message})
 
@@ -285,7 +285,7 @@ router.get('/mailForResetPassword/:email', asyncHandler(async (req,res) => {
       let options = {
         maxAge: 1000 * 60 * 15
       }
-      const emailSend = await sendEmail(template,subject,context)
+      const emailSend = await sendEmail(email,template,subject,context)
       const message = 'Email sent: ' + emailSend.response
       await res.cookie('reset-password',token,options)
       await res.header('Authorization', token).send({...user,message})
